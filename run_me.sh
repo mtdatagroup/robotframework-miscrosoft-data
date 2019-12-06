@@ -16,7 +16,8 @@ FINAL_IMAGE_PATH=${IMAGE_NAME}:${IMAGE_TAG}
 
 function usage()
 {
-   echo "${PROGRAM_NAME} [ -p | -b | -d | -a | -u | -8 | -c | -g | -r | -f ]"
+   echo "${PROGRAM_NAME} [ -b | -c | -i | -p | -t ]"
+   echo ""
    echo " -b = build docker image"
    echo " -c = build docker image - use no-cache"
    echo " -i = interactive bash shell"
