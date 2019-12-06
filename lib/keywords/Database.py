@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 
 from robot.api.deco import keyword
 from robot.api import logger
@@ -51,12 +51,17 @@ class Database:
             raise RuntimeError(f"Connection {connection_name} is not established in connection pool")
 
     @keyword(types={"query": str})
-    def read_query(self, query: str) -> pd.DataFrame:
-        return self.current_connection.read_query(query)
+    def execute_query(self, query: str) -> None:
+        self.current_connection.execute_query(query)
+
+    @keyword(types={"query": str, "as_pandas": bool})
+    def read_query(self, query: str, as_pandas: bool = False) -> Any:
+        df = self.current_connection.read_query(query)
+        return df if as_pandas else df.to_dict(orient="records")
 
     @keyword(types={"query": str})
     def read_scalar(self, query: str) -> str:
-        res = self.read_query(query)
+        res = self.read_query(query=query, as_pandas=True)
         return res.iloc[0][0]
 
     @keyword
@@ -82,7 +87,14 @@ class Database:
     @keyword(types={"file_path": str, "schema_name": str, "table_name": str})
     def load_table_with_csv(self, file_path: str, schema_name: str, table_name: str) -> int:
         df = pd.read_csv(filepath_or_buffer=file_path, header=0)
-        rows, columns = df.shape
-        logger.info(f"Fixture {file_path} read {rows} rows with {columns} columns")
         self.current_connection.load_df(df=df, schema_name=schema_name, table_name=table_name)
         return self.row_count(schema_name=schema_name, table_name=table_name)
+
+    @keyword(types={"schema_name": str, "table_name": str})
+    def get_table_metadata(self, schema_name: str, table_name: str) -> List[Dict[str, str]]:
+        df = self.current_connection.get_table_metadata(schema_name=schema_name, table_name=table_name)
+        return df.to_dict(orient="records")
+
+    @keyword(types={"schema_name": str, "table_name": str})
+    def truncate_table(self, schema_name: str, table_name: str) -> None:
+        self.execute_query(f"TRUNCATE TABLE {schema_name}.{table_name}")

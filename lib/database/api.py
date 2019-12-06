@@ -7,8 +7,6 @@ import sqlalchemy as alc
 
 class Api:
 
-    DEFAULT_CONNECTION_STRING = '{db_type}://{db_username}:{db_password}@{db_hostname}:{db_port}/{db_name}'
-
     def __init__(self, connection_string: str, **kwargs) -> None:
         self._engine = alc.create_engine(connection_string, **kwargs)
         self._logger = logging.getLogger(self.__class__.__name__)
@@ -36,3 +34,7 @@ class Api:
 
     def list_tables(self, schema_name: str) -> List[str]:
         return self._engine.table_names(schema=schema_name)
+
+    def get_table_metadata(self, schema_name: str, table_name: str) -> pd.DataFrame:
+        res = alc.inspect(self._engine).get_columns(schema=schema_name, table_name=table_name)
+        return pd.DataFrame(res)
