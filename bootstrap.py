@@ -1,3 +1,5 @@
+#! /usr/bin/env python3.6
+
 import logging.config
 import os
 import sys

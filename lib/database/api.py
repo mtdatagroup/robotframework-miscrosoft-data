@@ -1,11 +1,12 @@
 import logging
 from pprint import pprint
+from typing import List
 
 import pandas as pd
 import sqlalchemy as alc
 
 
-class DatabaseApi:
+class Api:
 
     DEFAULT_CONNECTION_STRING = '{db_type}://{db_username}:{db_password}@{db_hostname}:{db_port}/{db_name}'
 
@@ -22,33 +23,17 @@ class DatabaseApi:
         self._engine = None
 
     def execute_query(self, query: str) -> None:
-        self._logger.info(f'executing query {query}')
         res = self._engine.execute(query)
         res.close()
 
     def read_query(self, query: str) -> pd.DataFrame:
-        self._logger.info(f'executing query {query} and return result set as a pandas DataFrame')
         return pd.read_sql(query, con=self._engine)
 
+    def load_df(self, df: pd.DataFrame, schema_name: str, table_name: str) -> None:
+        df.to_sql(table_name, schema=schema_name, con=self._engine, index=False, if_exists='append')
 
-if __name__ == "__main__":
+    def list_schemas(self) -> List[str]:
+        return alc.inspect(self._engine).get_schema_names()
 
-    drivers={
-        "win-dev": "SQL+Server+Native+Client+11.0",
-        "centos7-dev": "ODBC+Driver+17+for+SQL+Server"
-    }
-    server="10.0.0.126"
-    driver=drivers["centos7-dev"]
-
-    conn = f"mssql+pyodbc://user:pass@{server}/AdventureWorksDW2017?driver={driver}"
-
-    db = DatabaseApi(connection_string=conn)
-    df = db.read_query("SELECT * FROM dbo.DimCustomer")
-    pprint(df)
-    db.disconnect()
-
-    # conn = "mssql+pyodbc://localhost/AdventureWorksDW2017?driver=SQL+Server+Native+Client+11.0&trusted_connection=yes"
-    # db = DatabaseApi(connection_string=conn)
-    # df = db.read_query("SELECT * FROM dbo.DimCustomer")
-    # pprint(df)
-    # db.disconnect()
+    def list_tables(self, schema_name: str) -> List[str]:
+        return self._engine.table_names(schema=schema_name)

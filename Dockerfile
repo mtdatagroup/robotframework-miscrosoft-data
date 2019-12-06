@@ -25,7 +25,7 @@ ENV LIB_DIR /usr/src/app/lib
 COPY requirements.txt /usr/src/app
 RUN pip3.6 install -r requirements.txt
 
-ENV PYTHONPATH ${PYTHONPATH}:${LIB_DIR}
+ENV PYTHONPATH ${PYTHONPATH}:${LIB_DIR}:${LIB_DIR}/keywords
 
 COPY config /usr/src/app/config
 COPY lib /usr/src/app/lib
