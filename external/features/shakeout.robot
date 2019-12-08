@@ -1,6 +1,6 @@
 *** Settings ***
 
-Library             Database
+Library             Database        dictionary
 Library             OperatingSystem
 
 Test Setup          Connect to Database
@@ -13,10 +13,12 @@ ${FIXTURE}              /usr/src/external/fixtures/test.csv
 
 *** Test Cases ***
 Play with SQL Server
-    ${df}=              read query
-    ...                 SELECT * FROM dbo.DimCustomer
-    ...                 True
+    set return type     pandas
+    ${df}=              read query          SELECT TOP 10 * FROM dbo.DimCustomer
     Log                 ${df}
+    set return type     dictionary
+    ${dict}=            read query          SELECT TOP 10 * FROM dbo.DimCustomer
+    Log                 ${dict}
     ${rec_count}=       read scalar         SELECT COUNT(*) FROM dbo.DimCustomer
     Log                 ${rec_count}
     ${non_scalar}=      read scalar         SELECT * FROM dbo.DimCustomer
@@ -36,8 +38,23 @@ Load data fixtures
     should not be equal as integers                 ${row_count}        0
     ${records}=             read_query              SELECT * FROM dbo.NameAgeTable
     Log                     ${records}
+    ${records2}=            read table              dbo         NameAgeTable
+    log                     ${records2}
     ${metadata}=            get table metadata      dbo         NameAgeTable
     log                     ${metadata}
+
+Play with Procedures and Functions
+    ${functions}=           list functions
+    log                     ${functions}
+    ${procs}=               list procedures
+    log                     ${procs}
+    ${result}=              read query              select dbo.udfTwoDigitZeroFill(1)
+    log                     ${result}
+    ${result2}=             execute procedure        SelectAllCustomers
+    log                     ${result2}
+    ${params}=              create list              1
+    ${result3}=             execute procedure        SelectAllCustomersWithTotalChildren    ${params}
+    log                     ${result3}
 
 *** Keywords ***
 Connect to Database

@@ -6,8 +6,9 @@ import sys
 from typing import List
 
 import yaml
-from dotenv import load_dotenv
 from robot import run_cli
+
+from config.app import REPORTS_DIR, FEATURES_DIR, APPLICATION_NAME
 
 
 class Bootstrap:
@@ -18,10 +19,10 @@ class Bootstrap:
 
     def _process_args(self) -> List[str]:
 
-        robot_args = ["--outputdir", os.environ["REPORTS_DIR"]]
+        robot_args = ["--outputdir", REPORTS_DIR]
 
         if len(self.args) == 0:
-            robot_args.append(os.environ["FEATURES_DIR"])
+            robot_args.append(FEATURES_DIR)
         else:
             robot_args += self.args
 
@@ -33,11 +34,9 @@ class Bootstrap:
 
 if __name__ == "__main__":
 
-    load_dotenv()
+    logging_config = os.path.join(os.path.dirname(__file__), "..", "config", "logging.yaml")
 
-    logging_config = os.path.join(os.path.dirname(__file__), "config", "logging.yaml")
-
-    print(f"{os.environ['APPLICATION_NAME']} started..")
+    print(f"{APPLICATION_NAME} started..")
 
     with open(logging_config, "rt") as f:
         logging.config.dictConfig(yaml.safe_load(f.read()))

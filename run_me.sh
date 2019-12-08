@@ -34,13 +34,13 @@ function docker_system_prune()
 function build_image()
 {
    echo "Building image ..."
-   docker build -f ${DOCKER_FILE} -t ${IMAGE_NAME_AND_TAG} .
+   docker build -f ${DOCKER_FILE} -t "${IMAGE_NAME_AND_TAG}" .
 }
 
 function build_image_no_cache()
 {
    echo "Building image ..."
-   docker build ${NO_CACHE_DOCKER_BUILD_OPTS} -f ${DOCKER_FILE} -t ${IMAGE_NAME_AND_TAG} .
+   docker build "${NO_CACHE_DOCKER_BUILD_OPTS}" -f ${DOCKER_FILE} -t "${IMAGE_NAME_AND_TAG}" .
 }
 
 function run_interactive()
@@ -50,10 +50,11 @@ function run_interactive()
    docker run --rm -it \
       --entrypoint "/bin/bash" \
       --name ${CONTAINER_NAME}-INTERACTIVE \
-      -v ${LOCAL_DIR}/external:/usr/src/external \
-      -v ${LOCAL_DIR}/lib:/usr/src/app/lib \
-      -v ${LOCAL_DIR}/tests:/usr/src/app/tests \
-      ${FINAL_IMAGE_PATH} 
+      -v "${LOCAL_DIR}"/external:/usr/src/external \
+      -v "${LOCAL_DIR}"/lib:/usr/src/app/lib \
+      -v "${LOCAL_DIR}"/bin:/usr/src/app/bin \
+      -v "${LOCAL_DIR}"/tests:/usr/src/app/tests \
+      "${FINAL_IMAGE_PATH}"
 }
 
 function run_container()
@@ -61,11 +62,9 @@ function run_container()
    echo "Running container ..."
 
    docker run --rm -it \
-      --name ${CONTAINER_NAME}-INTERACTIVE \
-      -v ${LOCAL_DIR}/external:/usr/src/external \
-      -v ${LOCAL_DIR}/lib:/usr/src/app/lib \
-      -v ${LOCAL_DIR}/tests:/usr/src/app/tests \
-      ${FINAL_IMAGE_PATH} 
+      --name ${CONTAINER_NAME} \
+      -v "${LOCAL_DIR}"/external:/usr/src/external \
+      "${FINAL_IMAGE_PATH}"
 }
 
 ###############

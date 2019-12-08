@@ -10,15 +10,28 @@ ROBOT_LIBRARY_SCOPE = "TEST_SUITE"
 
 class Database:
 
-    def __init__(self):
+    def __init__(self, return_type="dictionary"):
         self.__current_connection = None
         self.__connections = {}
+        self.__return_type = None
+
+        self.set_return_type(return_type)
 
     @property
     def current_connection(self) -> db.Api:
         if self.__current_connection is None:
             raise RuntimeError("No connection has been established")
         return self.__current_connection
+
+    @keyword(types={"return_type": str})
+    def set_return_type(self, return_type: str) -> str:
+
+        if return_type.lower() not in ["dictionary", "pandas"]:
+            raise RuntimeError(f"Unsupported return type '{return_type}'")
+
+        _previous_return_type = self.__return_type
+        self.__return_type = return_type.lower()
+        return _previous_return_type
 
     @keyword
     def number_of_connections(self) -> int:
@@ -54,14 +67,21 @@ class Database:
     def execute_query(self, query: str) -> None:
         self.current_connection.execute_query(query)
 
-    @keyword(types={"query": str, "as_pandas": bool})
-    def read_query(self, query: str, as_pandas: bool = False) -> Any:
+    @keyword(types={"schema_name": str, "table_name": str})
+    def read_table(self, schema_name: str, table_name: str) -> Any:
+        query = f"SELECT * FROM {schema_name}.{table_name}"
+        return self.read_query(query=query)
+
+    @keyword(types={"query": str})
+    def read_query(self, query: str) -> Any:
         df = self.current_connection.read_query(query)
-        return df if as_pandas else df.to_dict(orient="records")
+        return df if self.__return_type == "pandas" else df.to_dict(orient="records")
 
     @keyword(types={"query": str})
     def read_scalar(self, query: str) -> str:
-        res = self.read_query(query=query, as_pandas=True)
+        _rt = self.set_return_type("pandas")
+        res = self.read_query(query=query)
+        self.set_return_type(_rt)
         return res.iloc[0][0]
 
     @keyword
@@ -97,4 +117,16 @@ class Database:
 
     @keyword(types={"schema_name": str, "table_name": str})
     def truncate_table(self, schema_name: str, table_name: str) -> None:
-        self.execute_query(f"TRUNCATE TABLE {schema_name}.{table_name}")
+        self.current_connection.truncate_table(schema_name=schema_name, table_name=table_name)
+
+    @keyword
+    def list_functions(self) -> List[str]:
+        return self.current_connection.list_functions()
+
+    @keyword
+    def list_procedures(self) -> List[str]:
+        return self.current_connection.list_procedures()
+
+    @keyword(types={"procedure_name": str, "params": List[str]})
+    def execute_procedure(self, procedure_name: str, params: List[str] = None) -> Any:
+        return self.current_connection.execute_procedure(procedure_name=procedure_name, params=params)
