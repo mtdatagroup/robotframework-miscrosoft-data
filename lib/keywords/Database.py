@@ -23,6 +23,14 @@ class Database:
             raise RuntimeError("No connection has been established")
         return self.__current_connection
 
+    @property
+    def return_type_is_pandas(self) -> bool:
+        return self.__return_type == "pandas"
+
+    @property
+    def return_type_is_dictionary(self) -> bool:
+        return not self.return_type_is_pandas
+
     @keyword(types={"return_type": str})
     def set_return_type(self, return_type: str) -> str:
 
@@ -44,16 +52,16 @@ class Database:
         self.__current_connection = self.__connections[connection_name]
 
     @keyword
+    def disconnect_all(self):
+        for _connection in self.__connections.values():
+            _connection.disconnect()
+        self.__connections.clear()
+        self.__current_connection = None
+
+    @keyword
     def disconnect(self) -> None:
-
-        def retrieve_name():
-            for k, v in self.__connections.items():
-                if v == self.__current_connection:
-                    return k
-
         self.current_connection.disconnect()
-        connection_name = retrieve_name()
-        del self.__connections[connection_name]
+        del self.__connections[self.current_connection_name()]
         self.__current_connection = None
 
     @keyword(types={"connection_name": str})
@@ -61,7 +69,18 @@ class Database:
         if connection_name in self.__connections:
             self.__current_connection = self.__connections[connection_name]
         else:
-            raise RuntimeError(f"Connection {connection_name} is not established in connection pool")
+            raise RuntimeError(f"Connection '{connection_name}' is not established in connection pool")
+
+    @keyword
+    def current_connection_name(self) -> str:
+        for k, v in self.__connections.items():
+            if v == self.__current_connection:
+                return k
+        raise RuntimeError("No connection has been established")
+
+    @keyword
+    def list_connections(self) -> List[str]:
+        return self.__connections.keys()
 
     @keyword(types={"query": str})
     def execute_query(self, query: str) -> None:
@@ -75,14 +94,12 @@ class Database:
     @keyword(types={"query": str})
     def read_query(self, query: str) -> Any:
         df = self.current_connection.read_query(query)
-        return df if self.__return_type == "pandas" else df.to_dict(orient="records")
+        return df if self.return_type_is_pandas else df.to_dict(orient="records")
 
     @keyword(types={"query": str})
     def read_scalar(self, query: str) -> str:
-        _rt = self.set_return_type("pandas")
         res = self.read_query(query=query)
-        self.set_return_type(_rt)
-        return res.iloc[0][0]
+        return res.iloc[0][0] if self.return_type_is_pandas else list(res[0].values())[0]
 
     @keyword
     def list_schemas(self) -> List[str]:

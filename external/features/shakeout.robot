@@ -3,8 +3,8 @@
 Library             Database        dictionary
 Library             OperatingSystem
 
-Test Setup          Connect to Database
-Test Teardown       Disconnect from Database
+Test Setup          Connect to Database     AdventureWorks      ${CONNECTION_STRING}
+Test Teardown       Disconnect from Databases
 
 *** Variables ***
 ${SERVER}               10.0.0.126
@@ -12,6 +12,18 @@ ${CONNECTION_STRING}    user:pass@${SERVER}/AdventureWorksDW2017
 ${FIXTURE}              /usr/src/external/fixtures/test.csv
 
 *** Test Cases ***
+Interact with Connection
+    ${connection_name}=     current connection name
+    log                     ${connection_name}
+    ${connections}=         list connections
+    log                     ${connections}
+    Connect to Database     Bob         ${CONNECTION_STRING}
+    ${connections}=         list connections
+    log                     ${connections}
+    switch connection       Bob
+    ${connection_name}=     current connection name
+    log                     ${connection_name}
+
 Play with SQL Server
     set return type     pandas
     ${df}=              read query          SELECT TOP 10 * FROM dbo.DimCustomer
@@ -58,7 +70,9 @@ Play with Procedures and Functions
 
 *** Keywords ***
 Connect to Database
-    Connect To MsSql    AdventureWorks      ${CONNECTION_STRING}
+    [Arguments]         ${name}             ${alchemy_connection_string}
+    Log                 Connecting to database using name ${name}
+    Connect To MsSql    ${name}             ${alchemy_connection_string}
 
-Disconnect from Database
-    Disconnect
+Disconnect from Databases
+    Disconnect All
