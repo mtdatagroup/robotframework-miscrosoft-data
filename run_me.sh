@@ -26,6 +26,11 @@ function usage()
    exit 1
 }
 
+function host_ip_addr()
+{
+   ip addr show eth1 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1
+}
+
 function docker_system_prune()
 {
    docker system prune
@@ -46,10 +51,12 @@ function build_image_no_cache()
 function run_interactive()
 {
    echo "Running interactive session ..."
+   ip_addr=$(host_ip_addr)
 
    docker run --rm -it \
       --entrypoint "/bin/bash" \
       --name ${CONTAINER_NAME}-INTERACTIVE \
+      -e HOST=${ip_addr} \
       -v "${LOCAL_DIR}"/external:/usr/src/external \
       -v "${LOCAL_DIR}"/lib:/usr/src/app/lib \
       -v "${LOCAL_DIR}"/bin:/usr/src/app/bin \
@@ -63,6 +70,7 @@ function run_container()
 
    docker run --rm -it \
       --name ${CONTAINER_NAME} \
+      -e HOST=${ip_addr} \
       -v "${LOCAL_DIR}"/external:/usr/src/external \
       "${FINAL_IMAGE_PATH}"
 }
@@ -119,3 +127,6 @@ fi
 if [[ ${prune} -eq 1 ]] ; then
    docker_system_prune
 fi
+
+addr=$(host_ip_addr)
+echo "addr: ${addr}"

@@ -1,13 +1,13 @@
 *** Settings ***
 
-Library             Database        dictionary
+Library             Database
 Library             OperatingSystem
 
 Test Setup          Connect to Database     AdventureWorks      ${CONNECTION_STRING}
 Test Teardown       Disconnect from Databases
 
 *** Variables ***
-${SERVER}               10.0.0.126
+${SERVER}               %{HOST}
 ${CONNECTION_STRING}    user:pass@${SERVER}/AdventureWorksDW2017
 ${FIXTURE}              /usr/src/external/fixtures/test.csv
 
@@ -25,10 +25,8 @@ Interact with Connection
     log                     ${connection_name}
 
 Play with SQL Server
-    set return type     pandas
     ${df}=              read query          SELECT TOP 10 * FROM dbo.DimCustomer
     Log                 ${df}
-    set return type     dictionary
     ${dict}=            read query          SELECT TOP 10 * FROM dbo.DimCustomer
     Log                 ${dict}
     ${rec_count}=       read scalar         SELECT COUNT(*) FROM dbo.DimCustomer

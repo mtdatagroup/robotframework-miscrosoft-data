@@ -32,7 +32,7 @@ ENV PYTHONPATH ${PYTHONPATH}:${LIB_DIR}:${LIB_DIR}/keywords
 COPY config /usr/src/app/config
 COPY lib /usr/src/app/lib
 COPY .env /usr/src/app
-COPY bin/bootstrap.py /usr/src/app/bin
+COPY bin /usr/src/app/bin
 
 ENTRYPOINT ["/usr/bin/python3.6", "/usr/src/app/bin/bootstrap.py"]
 

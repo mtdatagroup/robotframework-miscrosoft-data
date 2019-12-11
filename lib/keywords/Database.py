@@ -10,12 +10,10 @@ ROBOT_LIBRARY_SCOPE = "TEST_SUITE"
 
 class Database:
 
-    def __init__(self, return_type="dictionary"):
+    def __init__(self, use_pandas: bool = False) -> None:
         self.__current_connection = None
         self.__connections = {}
-        self.__return_type = None
-
-        self.set_return_type(return_type)
+        self.__use_pandas = use_pandas
 
     @property
     def current_connection(self) -> db.Api:
@@ -23,23 +21,8 @@ class Database:
             raise RuntimeError("No connection has been established")
         return self.__current_connection
 
-    @property
-    def return_type_is_pandas(self) -> bool:
-        return self.__return_type == "pandas"
-
-    @property
-    def return_type_is_dictionary(self) -> bool:
-        return not self.return_type_is_pandas
-
-    @keyword(types={"return_type": str})
-    def set_return_type(self, return_type: str) -> str:
-
-        if return_type.lower() not in ["dictionary", "pandas"]:
-            raise RuntimeError(f"Unsupported return type '{return_type}'")
-
-        _previous_return_type = self.__return_type
-        self.__return_type = return_type.lower()
-        return _previous_return_type
+    def use_pandas(self, use_pandas: bool) -> bool:
+        self.__use_pandas = use_pandas
 
     @keyword
     def number_of_connections(self) -> int:
@@ -53,8 +36,8 @@ class Database:
 
     @keyword
     def disconnect_all(self):
-        for _connection in self.__connections.values():
-            _connection.disconnect()
+        for connection in self.__connections.values():
+            connection.disconnect()
         self.__connections.clear()
         self.__current_connection = None
 
@@ -94,12 +77,12 @@ class Database:
     @keyword(types={"query": str})
     def read_query(self, query: str) -> Any:
         df = self.current_connection.read_query(query)
-        return df if self.return_type_is_pandas else df.to_dict(orient="records")
+        return df if self.__use_pandas else df.to_dict(orient="records")
 
     @keyword(types={"query": str})
     def read_scalar(self, query: str) -> str:
         res = self.read_query(query=query)
-        return res.iloc[0][0] if self.return_type_is_pandas else list(res[0].values())[0]
+        return res.iloc[0][0] if self.__use_pandas else list(res[0].values())[0]
 
     @keyword
     def list_schemas(self) -> List[str]:
