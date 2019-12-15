@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     app_config_root_path = os.path.join(os.path.dirname(__file__), CONFIG_DIRECTORY)
 
-    logging.config.dictConfig(load_yaml(os.path.join(app_config_root_path, "logging.yaml")))
+    logging.config.dictConfig(load_yaml(os.path.abspath(os.path.join(app_config_root_path, "logging.yaml"))))
 
     if "APPLICATION_CONFIG" in os.environ:
         application_config_path = os.path.join(app_config_root_path, os.environ["APPLICATION_CONFIG"])

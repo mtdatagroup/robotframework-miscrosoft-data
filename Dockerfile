@@ -29,9 +29,9 @@ RUN pip3.6 install -r requirements.txt
 
 ENV PYTHONPATH ${PYTHONPATH}:keywords
 
-COPY config /usr/src/app
-COPY keywords /usr/src/app
-COPY database /usr/src/app
+COPY config /usr/src/app/config
+COPY keywords /usr/src/app/keywords
+COPY database /usr/src/app/database
 COPY bin /usr/src/app/bin
 COPY .env /usr/src/app
 
