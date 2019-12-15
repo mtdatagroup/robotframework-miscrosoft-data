@@ -15,24 +15,25 @@ RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm && \
 FROM BASE AS TF
 
 WORKDIR /usr/src/app
-VOLUME /usr/src/external
-VOLUME /usr/src/app/lib
-VOLUME /usr/src/app/bin
 
-ENV APP_ROOT /usr/src/app
-ENV LIB_DIR /usr/src/app/lib
+VOLUME /usr/src/external
+VOLUME /usr/src/app/
+
+#ENV APP_ROOT /usr/src/app
+#ENV LIB_DIR /usr/src/app/lib
 
 #ENV PATH $PATH:/opt/mssql-tools/bin
 
 COPY requirements.txt /usr/src/app
 RUN pip3.6 install -r requirements.txt
 
-ENV PYTHONPATH ${PYTHONPATH}:${LIB_DIR}:${LIB_DIR}/keywords
+ENV PYTHONPATH ${PYTHONPATH}:keywords
 
-COPY config /usr/src/app/config
-COPY lib /usr/src/app/lib
-COPY .env /usr/src/app
+COPY config /usr/src/app
+COPY keywords /usr/src/app
+COPY database /usr/src/app
 COPY bin /usr/src/app/bin
+COPY .env /usr/src/app
 
 ENTRYPOINT ["/usr/bin/python3.6", "/usr/src/app/bin/bootstrap.py"]
 

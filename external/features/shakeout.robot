@@ -2,14 +2,13 @@
 
 Library             Database
 Library             OperatingSystem
+Variables           ${CONFIG_DIR}/adventureworks.py
 
-Test Setup          Connect to Database     AdventureWorks      ${CONNECTION_STRING}
+Test Setup          Connect to Database     AdventureWorks      ${connection_string}
 Test Teardown       Disconnect from Databases
 
 *** Variables ***
-${SERVER}               %{HOST}
-${CONNECTION_STRING}    user:pass@${SERVER}/AdventureWorksDW2017
-${FIXTURE}              /usr/src/external/fixtures/test.csv
+${FIXTURE}              ${FIXTURES_DIR}/test.csv
 
 *** Test Cases ***
 Interact with Connection
@@ -17,7 +16,7 @@ Interact with Connection
     log                     ${connection_name}
     ${connections}=         list connections
     log                     ${connections}
-    Connect to Database     Bob         ${CONNECTION_STRING}
+    Connect to Database     Bob         ${connection_string}
     ${connections}=         list connections
     log                     ${connections}
     switch connection       Bob

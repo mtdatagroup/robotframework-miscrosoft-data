@@ -1,8 +1,7 @@
 from typing import List, Dict, Any
 
 from robot.api.deco import keyword
-from robot.api import logger
-from database import api as db
+from database import api as db, mssql
 import pandas as pd
 
 ROBOT_LIBRARY_SCOPE = "TEST_SUITE"
@@ -30,7 +29,6 @@ class Database:
 
     @keyword(types={"connection_name": str, "connection_string": str})
     def connect_to_mssql(self, connection_name: str, connection_string: str) -> None:
-        from database import mssql
         self.__connections[connection_name] = mssql.MsSql(connection_string=connection_string)
         self.__current_connection = self.__connections[connection_name]
 

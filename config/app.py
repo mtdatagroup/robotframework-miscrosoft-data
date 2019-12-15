@@ -1,6 +1,0 @@
-APPLICATION_NAME = "Helix2-tester"
-BASE_DIR = "/usr/src/app"
-EXTERNAL_DIR = "/usr/src/external"
-FEATURES_DIR = f"{EXTERNAL_DIR}/features"
-REPORTS_DIR = f"{EXTERNAL_DIR}/reports"
-EXTERNAL_CONFIG_YAML = f"{EXTERNAL_DIR}/.test_conf.yaml"

@@ -28,7 +28,8 @@ function usage()
 
 function host_ip_addr()
 {
-   ip addr show eth1 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1
+   #ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1
+   echo "host.docker.internal"
 }
 
 function docker_system_prune()
@@ -58,9 +59,7 @@ function run_interactive()
       --name ${CONTAINER_NAME}-INTERACTIVE \
       -e HOST=${ip_addr} \
       -v "${LOCAL_DIR}"/external:/usr/src/external \
-      -v "${LOCAL_DIR}"/lib:/usr/src/app/lib \
-      -v "${LOCAL_DIR}"/bin:/usr/src/app/bin \
-      -v "${LOCAL_DIR}"/tests:/usr/src/app/tests \
+      -v "${LOCAL_DIR}":/usr/src/app/ \
       "${FINAL_IMAGE_PATH}"
 }
 
