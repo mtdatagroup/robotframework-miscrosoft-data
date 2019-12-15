@@ -2,21 +2,32 @@
 
 Library             Database
 Library             OperatingSystem
+Variables           ${CONFIG_DIR}/adventureworks.py
+
+Test Setup          Connect to Database     AdventureWorks      ${connection_string}
+Test Teardown       Disconnect from Databases
 
 *** Variables ***
-${COMPANY_NAME}         Still working on it
-${SERVER}               10.0.0.126
-${CONNECTION_STRING}    user:pass@${SERVER}/AdventureWorksDW2017
-${FIXTURE}              /usr/src/external/fixtures/test.csv
+${FIXTURE}              ${FIXTURES_DIR}/test.csv
 
 *** Test Cases ***
-Hello from us
-    log to console  hello from ${COMPANY_NAME}
+Interact with Connection
+    ${connection_name}=     current connection name
+    log                     ${connection_name}
+    ${connections}=         list connections
+    log                     ${connections}
+    Connect to Database     Bob         ${connection_string}
+    ${connections}=         list connections
+    log                     ${connections}
+    switch connection       Bob
+    ${connection_name}=     current connection name
+    log                     ${connection_name}
 
 Play with SQL Server
-    Connect To MsSql    AdventureWorks      ${CONNECTION_STRING}
-    ${df}=              read query          SELECT * FROM dbo.DimCustomer
+    ${df}=              read query          SELECT TOP 10 * FROM dbo.DimCustomer
     Log                 ${df}
+    ${dict}=            read query          SELECT TOP 10 * FROM dbo.DimCustomer
+    Log                 ${dict}
     ${rec_count}=       read scalar         SELECT COUNT(*) FROM dbo.DimCustomer
     Log                 ${rec_count}
     ${non_scalar}=      read scalar         SELECT * FROM dbo.DimCustomer
@@ -25,13 +36,40 @@ Play with SQL Server
     log                 ${tables}
     ${exists}=          table exists        dbo     DimCustomer
     should be true      ${exists}
-    disconnect
 
 Load data fixtures
     ${fixture_contents}=    Get File                ${FIXTURE}
     Log                     ${fixture_contents}
-    Connect To MsSql        AdventureWorks          ${CONNECTION_STRING}
+    truncate table          dbo                     NameAgeTable
+    ${row_count}=           row count               dbo                 NameAgeTable
+    should be equal as integers                     ${row_count}        0
     ${row_count}=           load table with CSV     ${FIXTURE}          dbo         NameAgeTable
     should not be equal as integers                 ${row_count}        0
+    ${records}=             read_query              SELECT * FROM dbo.NameAgeTable
+    Log                     ${records}
+    ${records2}=            read table              dbo         NameAgeTable
+    log                     ${records2}
+    ${metadata}=            get table metadata      dbo         NameAgeTable
+    log                     ${metadata}
+
+Play with Procedures and Functions
+    ${functions}=           list functions
+    log                     ${functions}
+    ${procs}=               list procedures
+    log                     ${procs}
+    ${result}=              read query              select dbo.udfTwoDigitZeroFill(1)
+    log                     ${result}
+    ${result2}=             execute procedure        SelectAllCustomers
+    log                     ${result2}
+    ${params}=              create list              1
+    ${result3}=             execute procedure        SelectAllCustomersWithTotalChildren    ${params}
+    log                     ${result3}
 
 *** Keywords ***
+Connect to Database
+    [Arguments]         ${name}             ${alchemy_connection_string}
+    Log                 Connecting to database using name ${name}
+    Connect To MsSql    ${name}             ${alchemy_connection_string}
+
+Disconnect from Databases
+    Disconnect All

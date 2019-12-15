@@ -26,6 +26,12 @@ function usage()
    exit 1
 }
 
+function host_ip_addr()
+{
+   #ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1
+   echo "host.docker.internal"
+}
+
 function docker_system_prune()
 {
    docker system prune
@@ -34,26 +40,27 @@ function docker_system_prune()
 function build_image()
 {
    echo "Building image ..."
-   docker build -f ${DOCKER_FILE} -t ${IMAGE_NAME_AND_TAG} .
+   docker build -f ${DOCKER_FILE} -t "${IMAGE_NAME_AND_TAG}" .
 }
 
 function build_image_no_cache()
 {
    echo "Building image ..."
-   docker build ${NO_CACHE_DOCKER_BUILD_OPTS} -f ${DOCKER_FILE} -t ${IMAGE_NAME_AND_TAG} .
+   docker build "${NO_CACHE_DOCKER_BUILD_OPTS}" -f ${DOCKER_FILE} -t "${IMAGE_NAME_AND_TAG}" .
 }
 
 function run_interactive()
 {
    echo "Running interactive session ..."
+   ip_addr=$(host_ip_addr)
 
    docker run --rm -it \
       --entrypoint "/bin/bash" \
       --name ${CONTAINER_NAME}-INTERACTIVE \
-      -v ${LOCAL_DIR}/external:/usr/src/external \
-      -v ${LOCAL_DIR}/lib:/usr/src/app/lib \
-      -v ${LOCAL_DIR}/tests:/usr/src/app/tests \
-      ${FINAL_IMAGE_PATH} 
+      -e HOST=${ip_addr} \
+      -v "${LOCAL_DIR}"/external:/usr/src/external \
+      -v "${LOCAL_DIR}":/usr/src/app/ \
+      "${FINAL_IMAGE_PATH}"
 }
 
 function run_container()
@@ -61,11 +68,10 @@ function run_container()
    echo "Running container ..."
 
    docker run --rm -it \
-      --name ${CONTAINER_NAME}-INTERACTIVE \
-      -v ${LOCAL_DIR}/external:/usr/src/external \
-      -v ${LOCAL_DIR}/lib:/usr/src/app/lib \
-      -v ${LOCAL_DIR}/tests:/usr/src/app/tests \
-      ${FINAL_IMAGE_PATH} 
+      --name ${CONTAINER_NAME} \
+      -e HOST=${ip_addr} \
+      -v "${LOCAL_DIR}"/external:/usr/src/external \
+      "${FINAL_IMAGE_PATH}"
 }
 
 ###############
@@ -120,3 +126,6 @@ fi
 if [[ ${prune} -eq 1 ]] ; then
    docker_system_prune
 fi
+
+addr=$(host_ip_addr)
+echo "addr: ${addr}"

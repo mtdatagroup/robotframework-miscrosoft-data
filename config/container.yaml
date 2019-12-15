@@ -1,0 +1,8 @@
+application_name: halcyon-test
+filesystem:
+  base_directory: /usr/src/app
+  external_directory: /usr/src/external
+  configuration_directory: /usr/src/external/config
+  features_directory: /usr/src/external/features
+  reports_directory: /usr/src/external/reports
+  external_config_file: /usr/src/external/.test_conf.yaml
