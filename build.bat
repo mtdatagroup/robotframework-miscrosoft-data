@@ -1,0 +1,1 @@
+docker build -t data-x-tf-image:1.0.0 .
