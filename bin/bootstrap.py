@@ -10,13 +10,16 @@ import yaml
 from robot import run_cli
 
 APP_CONFIG_DIRECTORY = os.path.abspath(os.path.join(os.path.dirname(__file__), "../config"))
-PLATFORM_PREFIX = platform.platform().split('-')[0].lower()
 
 
 def load_yaml(yaml_file_path) -> Dict[str, Any]:
     with open(yaml_file_path, 'r') as f:
         return yaml.safe_load(f.read())
 
+
+def load_application_config() -> Dict[str, Any]:
+    platform_prefix = platform.platform().split('-')[0].lower()
+    return load_yaml(os.path.join(APP_CONFIG_DIRECTORY, f"app_config_{platform_prefix}.yaml"))
 
 
 class Bootstrap:
@@ -50,11 +53,10 @@ if __name__ == "__main__":
 
     logging.config.dictConfig(load_yaml(os.path.abspath(os.path.join(APP_CONFIG_DIRECTORY, "logging.yaml"))))
 
-    app_config = load_yaml(os.path.join(APP_CONFIG_DIRECTORY, f"{PLATFORM_PREFIX}_application_config.yaml"))
+    app_config = load_application_config()
 
     print(f"{app_config['application_name']} started..")
 
-    print(app_config)
     bootstrap = Bootstrap(config=app_config, args=sys.argv[1:])
 
     try:
