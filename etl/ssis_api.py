@@ -5,7 +5,7 @@ import pandas as pd
 from database import api as db, mssql
 
 
-class SSIS:
+class SSISApi:
 
     DB_NAME = "SSISDB"
 
@@ -72,7 +72,7 @@ if __name__ == "__main__":
     db_config = {
         "username": "user",
         "password": "pass",
-        "dbname": SSIS.DB_NAME,
+        "dbname": SSISApi.DB_NAME,
         "host": "localhost"
     }
 
@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
     db = mssql.MsSql(connection_string=connection_string)
 
-    ssis = SSIS(database=db)
+    ssis = SSISApi(database=db)
 
     print(ssis.catalog_properties)
     print(ssis.list_catalog())

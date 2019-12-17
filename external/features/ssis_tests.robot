@@ -3,7 +3,7 @@
 Library             SSISLibrary
 Variables           ${CONFIG_DIR}/adventureworks.py
 
-Test Setup          Connect to SSIS DB
+Test Setup          connect         ${ssis_connection_string}
 Test Teardown       disconnect
 Default Tags        SSIS
 
@@ -13,7 +13,7 @@ Poke around
     log                 ${config}
     ${folders}=         list folders
     log                 ${folders}
+    ${projects}=        list all projects
+    log                 ${projects}
 
 *** Keywords ***
-Connect to SSIS DB
-    connect         ${ssis_connection_string}

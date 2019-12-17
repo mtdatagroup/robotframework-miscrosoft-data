@@ -1,9 +1,10 @@
 from typing import Dict, List
 
-from SSHLibrary.deco import keyword
+from robot.api import logger
+from robot.api.deco import keyword
 
 import mssql
-from etl import ssis
+from etl import ssis_api as ssis
 
 ROBOT_LIBRARY_SCOPE = "TEST_SUITE"
 
@@ -14,7 +15,7 @@ class SSISLibrary:
         self.__ssis_connection = None
 
     @property
-    def ssis_connection(self) -> ssis.SSIS:
+    def ssis_connection(self) -> ssis.SSISApi:
         if self.__ssis_connection is None:
             raise RuntimeError("No SSIS connection has been established")
         return self.__ssis_connection
@@ -22,7 +23,8 @@ class SSISLibrary:
     @keyword(types={"connection_string" : str})
     def connect(self, connection_string: str) -> None:
         db_api = mssql.MsSql(connection_string=connection_string)
-        self.__ssis_connection = ssis.SSIS(db_api)
+        logger.info("Connected")
+        self.__ssis_connection = ssis.SSISApi(db_api)
 
     @keyword
     def list_catalog_properties(self) -> Dict[str, str]:
