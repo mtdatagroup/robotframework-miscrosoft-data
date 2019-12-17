@@ -1,7 +1,6 @@
-application_name: helix2-test
 filesystem:
   config: external/config
   features: external/features
   reports: external/reports
   fixtures: external/fixtures
-external_config_file: external/.test_conf.yaml
+user_config_file: external/.test.yaml

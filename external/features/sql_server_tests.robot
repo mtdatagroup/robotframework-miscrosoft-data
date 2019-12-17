@@ -6,6 +6,7 @@ Variables           ${CONFIG_DIR}/adventureworks.py
 
 Test Setup          Connect to Database     AdventureWorks      ${connection_string}
 Test Teardown       Disconnect from Databases
+Default Tags        Database        SQL Server
 
 *** Variables ***
 ${FIXTURE}              ${FIXTURES_DIR}/test.csv

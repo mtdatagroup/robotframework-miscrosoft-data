@@ -1,0 +1,6 @@
+run:
+  - exitonfailure
+  - exitonerror
+  - name: Testing the framework
+  - console: verbose
+  - debugfile: /usr/src/app/external/reports/debug.log
