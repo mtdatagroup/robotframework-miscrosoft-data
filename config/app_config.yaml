@@ -1,5 +1,0 @@
-application_name: helix2-test
-robot_options:
-  extension: robot
-robot_listeners:
-    - listeners.suite_listener

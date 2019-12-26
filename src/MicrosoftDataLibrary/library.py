@@ -1,21 +1,35 @@
 from typing import List, Dict, Any
 
 from robot.api.deco import keyword
-from database import api as db, mssql
 import pandas as pd
+from .client import DatabaseClient
+from .version import VERSION
 
-ROBOT_LIBRARY_SCOPE = "TEST_SUITE"
+__version__ = VERSION
 
 
-class Database:
+class MicrosoftDataLibrary:
+    """MicrosoftDataLibrary is a Robot Framework library specific to SQL Server and SSIS
+
+    """
+
+    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    ROBOT_LIBRARY_VERSION = __version__
 
     def __init__(self, use_pandas: bool = False) -> None:
         self.__current_connection = None
         self.__connections = {}
         self.__use_pandas = use_pandas
+        self.__ssis_catalog_client = None
 
     @property
-    def current_connection(self) -> db.Api:
+    def ssis_catalog_client(self) -> None:
+        if self.__ssis_catalog_client is None:
+            raise RuntimeError("No connection to the SSIS Catalog been established")
+        return self.__ssis_catalog_client
+
+    @property
+    def current_connection(self) -> DatabaseClient:
         if self.__current_connection is None:
             raise RuntimeError("No connection has been established")
         return self.__current_connection
@@ -25,19 +39,35 @@ class Database:
 
     @keyword
     def number_of_connections(self) -> int:
+        """Retrieve the number of registered connections
+        """
         return len(self.__connections)
 
     @keyword(types={"connection_name": str, "connection_string": str})
     def connect_to_mssql(self, connection_name: str, connection_string: str) -> None:
-        self.__connections[connection_name] = mssql.MsSql(connection_string=connection_string)
+        self.__connections[connection_name] = DatabaseClient(connection_string=connection_string)
         self.__current_connection = self.__connections[connection_name]
+
+    @keyword(types={"connection_string": str})
+    def connect_to_ssis_catalog(self, connection_string: str) -> None:
+        self.__ssis_catalog_client = DatabaseClient(connection_string=connection_string)
 
     @keyword
     def disconnect_all(self):
+
         for connection in self.__connections.values():
             connection.disconnect()
         self.__connections.clear()
         self.__current_connection = None
+
+        self.disconnect_from_ssis_catalog()
+
+    @keyword
+    def disconnect_from_ssis_catalog(self):
+
+        if self.__ssis_catalog_client:
+            self.__ssis_catalog_client.disconnect()
+            self.__ssis_catalog_client = None
 
     @keyword
     def disconnect(self) -> None:
@@ -128,3 +158,27 @@ class Database:
     @keyword(types={"procedure_name": str, "params": List[str]})
     def execute_procedure(self, procedure_name: str, params: List[str] = None) -> Any:
         return self.current_connection.execute_procedure(procedure_name=procedure_name, params=params)
+
+    @keyword
+    def get_ssis_catalog_properties(self) -> Dict[str, str]:
+        return self.ssis_catalog_client.catalog_properties
+
+    @keyword
+    def list_ssis_folders(self) -> List[str]:
+        return self.ssis_catalog_client.list_folders()
+
+    @keyword(types={"folder_name": str})
+    def list_ssis_projects(self, folder_name: str) -> List[str]:
+        return self.ssis_catalog_client.list_projects(folder_name)
+
+    @keyword(types={"folder_name": str, "project_name": str})
+    def list_ssis_packages(self, folder_name: str, project_name: str) -> List[str]:
+        return self.ssis_catalog_client.list_packages(folder_name=folder_name, project_name=project_name)
+
+    @keyword
+    def list_all_ssis_projects(self) -> List[str]:
+        return self.ssis_catalog_client.list_all_projects()
+
+    @keyword
+    def list_all_ssis_packages(self) -> List[str]:
+        return self.ssis_catalog_client.list_all_packages()

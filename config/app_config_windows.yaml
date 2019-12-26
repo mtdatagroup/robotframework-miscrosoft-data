@@ -1,6 +1,0 @@
-filesystem:
-  config: external/config
-  features: external/features
-  reports: external/reports
-  fixtures: external/fixtures
-user_config_file: external/.test.yaml

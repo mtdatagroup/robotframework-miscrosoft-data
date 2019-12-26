@@ -1,15 +1,14 @@
 *** Settings ***
 
-Library             Database
 Library             OperatingSystem
-Variables           ${CONFIG_DIR}/adventureworks.py
+Variables           adventureworks.py
 
 Test Setup          Connect to Database     AdventureWorks      ${connection_string}
 Test Teardown       Disconnect from Databases
-Default Tags        Database        SQL Server
+Default Tags        Database        SQL Server      windows
 
 *** Variables ***
-${FIXTURE}              ${FIXTURES_DIR}/test.csv
+${FIXTURE}              testdata/test.csv
 
 *** Test Cases ***
 Interact with Connection
