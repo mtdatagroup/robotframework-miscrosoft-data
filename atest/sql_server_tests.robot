@@ -1,5 +1,6 @@
 *** Settings ***
 
+Library             MicrosoftDataLibrary
 Library             OperatingSystem
 Variables           adventureworks.py
 
@@ -68,8 +69,7 @@ Play with Procedures and Functions
 *** Keywords ***
 Connect to Database
     [Arguments]         ${name}             ${alchemy_connection_string}
-    Log                 Connecting to database using name ${name}
-    Connect To MsSql    ${name}             ${alchemy_connection_string}
+    Connect             ${name}             ${alchemy_connection_string}
 
 Disconnect from Databases
     Disconnect All

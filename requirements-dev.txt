@@ -1,6 +1,6 @@
-robotframework
-SQLAlchemy
-pandas
-pyodbc
+# robotframework
+# SQLAlchemy
+# pandas
+# pyodbc
 robotstatuschecker
 robotbackgroundlogger

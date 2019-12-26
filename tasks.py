@@ -18,7 +18,7 @@ VERSION_PATTERN = "VERSION = '(.*)'"
 RELEASE_NOTES_PATH = Path('docs/MicrosoftDataLibrary-{version}.rst')
 RELEASE_NOTES_TITLE = 'MicrosoftDataLibrary {version}'
 RELEASE_NOTES_INTRO = '''
-Takaya and Stella to write some fluffy suff here
+Tak and Stella to write some fluffy stuff here
 '''
 
 

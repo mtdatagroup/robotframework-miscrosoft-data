@@ -1,25 +1,14 @@
+import os
 from typing import List, Any, Dict
 import pandas as pd
 import sqlalchemy as alc
 from sqlalchemy.orm import sessionmaker
-
-
-class _ClientConfig:
-    DB_DRIVER = "ODBC+Driver+17+for+SQL+Server"
-    DB_DIALECT = "mssql+pyodbc://"
-    SSIS_DB_NAME = "SSISDB"
+from robot.api import logger
 
 
 class DatabaseClient:
 
-    ALCHEMY_DRIVER = "ODBC+Driver+17+for+SQL+Server"
-    ALCHEMY_DIALECT = "mssql+pyodbc://"
-    SSIS_DB_NAME = "SSISDB"
-
     def __init__(self, connection_string: str, **kwargs) -> None:
-
-        _token = "&" if "?" in connection_string else "?"
-        _connection_string = f"{_ClientConfig.DB_DIALECT}{connection_string}{_token}driver={_ClientConfig.DB_DRIVER}"
         self._engine = alc.create_engine(connection_string, **kwargs)
 
     def __repr__(self):

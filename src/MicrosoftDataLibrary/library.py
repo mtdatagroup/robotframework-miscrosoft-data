@@ -44,7 +44,7 @@ class MicrosoftDataLibrary:
         return len(self.__connections)
 
     @keyword(types={"connection_name": str, "connection_string": str})
-    def connect_to_mssql(self, connection_name: str, connection_string: str) -> None:
+    def connect(self, connection_name: str, connection_string: str) -> None:
         self.__connections[connection_name] = DatabaseClient(connection_string=connection_string)
         self.__current_connection = self.__connections[connection_name]
 
