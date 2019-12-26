@@ -1,15 +1,14 @@
 *** Settings ***
 
-Library             MicrosoftDataLibrary
+Resource            resources/common.robot
 Library             OperatingSystem
-Variables           adventureworks.py
 
 Test Setup          Connect to Database     AdventureWorks      ${connection_string}
 Test Teardown       Disconnect from Databases
 Default Tags        Database        SQL Server      windows
 
 *** Variables ***
-${FIXTURE}              testdata/test.csv
+${FIXTURE}                  ${TESTDATA_DIRECTORY}/test.csv
 
 *** Test Cases ***
 Interact with Connection
@@ -66,10 +65,7 @@ Play with Procedures and Functions
     ${result3}=             execute procedure        SelectAllCustomersWithTotalChildren    ${params}
     log                     ${result3}
 
-*** Keywords ***
-Connect to Database
-    [Arguments]         ${name}             ${alchemy_connection_string}
-    Connect             ${name}             ${alchemy_connection_string}
-
-Disconnect from Databases
-    Disconnect All
+Play with the SSIS Catalog
+    connect to ssis catalog     ${ssis_connection_string}
+    ${catalog_properties}=      get ssis catalog properties
+    log                         ${catalog_properties}

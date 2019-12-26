@@ -78,7 +78,7 @@ class DatabaseClient:
                      JOIN catalog.packages pk
                        ON pj.project_id = pk.project_id
         """
-        return self.__database.read_query(query)
+        return self.read_query(query)
 
     def list_ssis_catalog(self) -> List[Dict[str, str]]:
         return self.__query_ssis_catalog().to_dict(orient="records")
@@ -105,8 +105,7 @@ class DatabaseClient:
         df = self.__query_ssis_catalog()
         return df['package_name'].unique()
 
-    @property
-    def ssis_catalog_properties(self) -> Dict[str, str]:
+    def get_ssis_catalog_properties(self) -> Dict[str, str]:
         query = "select property_name, property_value from catalog.catalog_properties"
-        df = self.__database.read_query(query)
+        df = self.read_query(query)
         return {prop['property_name']: prop['property_value'] for prop in df.to_dict(orient="records")}

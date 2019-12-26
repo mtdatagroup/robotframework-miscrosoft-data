@@ -23,7 +23,7 @@ class MicrosoftDataLibrary:
         self.__ssis_catalog_client = None
 
     @property
-    def ssis_catalog_client(self) -> None:
+    def ssis_catalog_client(self) -> DatabaseClient:
         if self.__ssis_catalog_client is None:
             raise RuntimeError("No connection to the SSIS Catalog been established")
         return self.__ssis_catalog_client
@@ -161,24 +161,24 @@ class MicrosoftDataLibrary:
 
     @keyword
     def get_ssis_catalog_properties(self) -> Dict[str, str]:
-        return self.ssis_catalog_client.catalog_properties
+        return self.ssis_catalog_client.get_ssis_catalog_properties()
 
     @keyword
     def list_ssis_folders(self) -> List[str]:
-        return self.ssis_catalog_client.list_folders()
+        return self.ssis_catalog_client.list_ssis_folders()
 
     @keyword(types={"folder_name": str})
     def list_ssis_projects(self, folder_name: str) -> List[str]:
-        return self.ssis_catalog_client.list_projects(folder_name)
+        return self.ssis_catalog_client.list_ssis_projects(folder_name)
 
     @keyword(types={"folder_name": str, "project_name": str})
     def list_ssis_packages(self, folder_name: str, project_name: str) -> List[str]:
-        return self.ssis_catalog_client.list_packages(folder_name=folder_name, project_name=project_name)
+        return self.ssis_catalog_client.list_ssis_packages(folder_name=folder_name, project_name=project_name)
 
     @keyword
     def list_all_ssis_projects(self) -> List[str]:
-        return self.ssis_catalog_client.list_all_projects()
+        return self.ssis_catalog_client.list_all_ssis_projects()
 
     @keyword
     def list_all_ssis_packages(self) -> List[str]:
-        return self.ssis_catalog_client.list_all_packages()
+        return self.ssis_catalog_client.list_all_ssis_packages()

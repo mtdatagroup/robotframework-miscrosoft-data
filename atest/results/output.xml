@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Rebot 3.1.2 (Python 3.7.5 on win32)" generated="20191226 21:51:48.273" rpa="false">
+<suite id="s1" name="Atest" source="C:\Users\markp\PycharmProjects\test-framework\atest">
+<suite id="s1-s1" name="Sql Server Tests" source="C:\Users\markp\PycharmProjects\test-framework\atest\sql_server_tests.robot">
+<test id="s1-s1-t1" name="Interact with Connection">
+<kw name="Connect to Database" library="common" type="setup">
+<arguments>
+<arg>AdventureWorks</arg>
+<arg>${connection_string}</arg>
+</arguments>
+<kw name="Connect" library="MicrosoftDataLibrary">
+<arguments>
+<arg>${name}</arg>
+<arg>${alchemy_connection_string}</arg>
+</arguments>
+<status status="PASS" starttime="20191226 21:51:44.005" endtime="20191226 21:51:44.059"></status>
+</kw>
+<status status="PASS" starttime="20191226 21:51:44.004" endtime="20191226 21:51:44.060"></status>
+</kw>
+<kw name="Current Connection Name" library="MicrosoftDataLibrary">
+<assign>
+<var>${connection_name}</var>
+</assign>
+<msg timestamp="20191226 21:51:44.062" level="INFO">${connection_name} = AdventureWorks</msg>
+<status status="PASS" starttime="20191226 21:51:44.061" endtime="20191226 21:51:44.062"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${connection_name}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:44.064" level="INFO">AdventureWorks</msg>
+<status status="PASS" starttime="20191226 21:51:44.063" endtime="20191226 21:51:44.064"></status>
+</kw>
+<kw name="List Connections" library="MicrosoftDataLibrary">
+<assign>
+<var>${connections}</var>
+</assign>
+<msg timestamp="20191226 21:51:44.066" level="INFO">${connections} = dict_keys(['AdventureWorks'])</msg>
+<status status="PASS" starttime="20191226 21:51:44.065" endtime="20191226 21:51:44.066"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${connections}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:44.068" level="INFO">dict_keys(['AdventureWorks'])</msg>
+<status status="PASS" starttime="20191226 21:51:44.067" endtime="20191226 21:51:44.068"></status>
+</kw>
+<kw name="Connect to Database" library="common">
+<arguments>
+<arg>Bob</arg>
+<arg>${connection_string}</arg>
+</arguments>
+<kw name="Connect" library="MicrosoftDataLibrary">
+<arguments>
+<arg>${name}</arg>
+<arg>${alchemy_connection_string}</arg>
+</arguments>
+<status status="PASS" starttime="20191226 21:51:44.070" endtime="20191226 21:51:44.072"></status>
+</kw>
+<status status="PASS" starttime="20191226 21:51:44.069" endtime="20191226 21:51:44.072"></status>
+</kw>
+<kw name="List Connections" library="MicrosoftDataLibrary">
+<assign>
+<var>${connections}</var>
+</assign>
+<msg timestamp="20191226 21:51:44.074" level="INFO">${connections} = dict_keys(['AdventureWorks', 'Bob'])</msg>
+<status status="PASS" starttime="20191226 21:51:44.073" endtime="20191226 21:51:44.074"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${connections}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:44.076" level="INFO">dict_keys(['AdventureWorks', 'Bob'])</msg>
+<status status="PASS" starttime="20191226 21:51:44.075" endtime="20191226 21:51:44.076"></status>
+</kw>
+<kw name="Switch Connection" library="MicrosoftDataLibrary">
+<arguments>
+<arg>Bob</arg>
+</arguments>
+<status status="PASS" starttime="20191226 21:51:44.077" endtime="20191226 21:51:44.078"></status>
+</kw>
+<kw name="Current Connection Name" library="MicrosoftDataLibrary">
+<assign>
+<var>${connection_name}</var>
+</assign>
+<msg timestamp="20191226 21:51:44.081" level="INFO">${connection_name} = Bob</msg>
+<status status="PASS" starttime="20191226 21:51:44.080" endtime="20191226 21:51:44.081"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${connection_name}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:44.084" level="INFO">Bob</msg>
+<status status="PASS" starttime="20191226 21:51:44.084" endtime="20191226 21:51:44.085"></status>
+</kw>
+<kw name="Disconnect from Databases" library="common" type="teardown">
+<kw name="Disconnect All" library="MicrosoftDataLibrary">
+<status status="PASS" starttime="20191226 21:51:44.087" endtime="20191226 21:51:44.088"></status>
+</kw>
+<status status="PASS" starttime="20191226 21:51:44.086" endtime="20191226 21:51:44.089"></status>
+</kw>
+<tags>
+<tag>Database</tag>
+<tag>SQL Server</tag>
+<tag>windows</tag>
+</tags>
+<status status="PASS" starttime="20191226 21:51:44.003" endtime="20191226 21:51:44.090" critical="yes"></status>
+</test>
+<test id="s1-s1-t2" name="Play with SQL Server">
+<kw name="Connect to Database" library="common" type="setup">
+<arguments>
+<arg>AdventureWorks</arg>
+<arg>${connection_string}</arg>
+</arguments>
+<kw name="Connect" library="MicrosoftDataLibrary">
+<arguments>
+<arg>${name}</arg>
+<arg>${alchemy_connection_string}</arg>
+</arguments>
+<status status="PASS" starttime="20191226 21:51:44.098" endtime="20191226 21:51:44.099"></status>
+</kw>
+<status status="PASS" starttime="20191226 21:51:44.097" endtime="20191226 21:51:44.100"></status>
+</kw>
+<kw name="Read Query" library="MicrosoftDataLibrary">
+<arguments>
+<arg>SELECT TOP 10 * FROM dbo.DimCustomer</arg>
+</arguments>
+<assign>
+<var>${df}</var>
+</assign>
+<msg timestamp="20191226 21:51:44.338" level="INFO">${df} = [{'CustomerKey': 11000, 'GeographyKey': 26, 'CustomerAlternateKey': 'AW00011000', 'Title': None, 'FirstName': 'Jon', 'MiddleName': 'V', 'LastName': 'Yang', 'NameStyle': False, 'BirthDate': datetime.da...</msg>
+<status status="PASS" starttime="20191226 21:51:44.101" endtime="20191226 21:51:44.338"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${df}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:44.341" level="INFO">[{'CustomerKey': 11000, 'GeographyKey': 26, 'CustomerAlternateKey': 'AW00011000', 'Title': None, 'FirstName': 'Jon', 'MiddleName': 'V', 'LastName': 'Yang', 'NameStyle': False, 'BirthDate': datetime.date(1971, 10, 6), 'MaritalStatus': 'M', 'Suffix': None, 'Gender': 'M', 'EmailAddress': 'jon24@adventure-works.com', 'YearlyIncome': 90000.0, 'TotalChildren': 2, 'NumberChildrenAtHome': 0, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 0, 'AddressLine1': '3761 N. 14th St', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0162', 'DateFirstPurchase': datetime.date(2011, 1, 19), 'CommuteDistance': '1-2 Miles'}, {'CustomerKey': 11001, 'GeographyKey': 37, 'CustomerAlternateKey': 'AW00011001', 'Title': None, 'FirstName': 'Eugene', 'MiddleName': 'L', 'LastName': 'Huang', 'NameStyle': False, 'BirthDate': datetime.date(1976, 5, 10), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'M', 'EmailAddress': 'eugene10@adventure-works.com', 'YearlyIncome': 60000.0, 'TotalChildren': 3, 'NumberChildrenAtHome': 3, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '0', 'NumberCarsOwned': 1, 'AddressLine1': '2243 W St.', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0110', 'DateFirstPurchase': datetime.date(2011, 1, 15), 'CommuteDistance': '0-1 Miles'}, {'CustomerKey': 11002, 'GeographyKey': 31, 'CustomerAlternateKey': 'AW00011002', 'Title': None, 'FirstName': 'Ruben', 'MiddleName': None, 'LastName': 'Torres', 'NameStyle': False, 'BirthDate': datetime.date(1971, 2, 9), 'MaritalStatus': 'M', 'Suffix': None, 'Gender': 'M', 'EmailAddress': 'ruben35@adventure-works.com', 'YearlyIncome': 60000.0, 'TotalChildren': 3, 'NumberChildrenAtHome': 3, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 1, 'AddressLine1': '5844 Linden Land', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0184', 'DateFirstPurchase': datetime.date(2011, 1, 7), 'CommuteDistance': '2-5 Miles'}, {'CustomerKey': 11003, 'GeographyKey': 11, 'CustomerAlternateKey': 'AW00011003', 'Title': None, 'FirstName': 'Christy', 'MiddleName': None, 'LastName': 'Zhu', 'NameStyle': False, 'BirthDate': datetime.date(1973, 8, 14), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'F', 'EmailAddress': 'christy12@adventure-works.com', 'YearlyIncome': 70000.0, 'TotalChildren': 0, 'NumberChildrenAtHome': 0, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '0', 'NumberCarsOwned': 1, 'AddressLine1': '1825 Village Pl.', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0162', 'DateFirstPurchase': datetime.date(2010, 12, 29), 'CommuteDistance': '5-10 Miles'}, {'CustomerKey': 11004, 'GeographyKey': 19, 'CustomerAlternateKey': 'AW00011004', 'Title': None, 'FirstName': 'Elizabeth', 'MiddleName': None, 'LastName': 'Johnson', 'NameStyle': False, 'BirthDate': datetime.date(1979, 8, 5), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'F', 'EmailAddress': 'elizabeth5@adventure-works.com', 'YearlyIncome': 80000.0, 'TotalChildren': 5, 'NumberChildrenAtHome': 5, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 4, 'AddressLine1': '7553 Harness Circle', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0131', 'DateFirstPurchase': datetime.date(2011, 1, 23), 'CommuteDistance': '1-2 Miles'}, {'CustomerKey': 11005, 'GeographyKey': 22, 'CustomerAlternateKey': 'AW00011005', 'Title': None, 'FirstName': 'Julio', 'MiddleName': None, 'LastName': 'Ruiz', 'NameStyle': False, 'BirthDate': datetime.date(1976, 8, 1), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'M', 'EmailAddress': 'julio1@adventure-works.com', 'YearlyIncome': 70000.0, 'TotalChildren': 0, 'NumberChildrenAtHome': 0, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 1, 'AddressLine1': '7305 Humphrey Drive', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0151', 'DateFirstPurchase': datetime.date(2010, 12, 30), 'CommuteDistance': '5-10 Miles'}, {'CustomerKey': 11006, 'GeographyKey': 8, 'CustomerAlternateKey': 'AW00011006', 'Title': None, 'FirstName': 'Janet', 'MiddleName': 'G', 'LastName': 'Alvarez', 'NameStyle': False, 'BirthDate': datetime.date(1976, 12, 2), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'F', 'EmailAddress': 'janet9@adventure-works.com', 'YearlyIncome': 70000.0, 'TotalChildren': 0, 'NumberChildrenAtHome': 0, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 1, 'AddressLine1': '2612 Berry Dr', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0184', 'DateFirstPurchase': datetime.date(2011, 1, 24), 'CommuteDistance': '5-10 Miles'}, {'CustomerKey': 11007, 'GeographyKey': 40, 'CustomerAlternateKey': 'AW00011007', 'Title': None, 'FirstName': 'Marco', 'MiddleName': None, 'LastName': 'Mehta', 'NameStyle': False, 'BirthDate': datetime.date(1969, 11, 6), 'MaritalStatus': 'M', 'Suffix': None, 'Gender': 'M', 'EmailAddress': 'marco14@adventure-works.com', 'YearlyIncome': 60000.0, 'TotalChildren': 3, 'NumberChildrenAtHome': 3, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 2, 'AddressLine1': '942 Brook Street', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0126', 'DateFirstPurchase': datetime.date(2011, 1, 9), 'CommuteDistance': '0-1 Miles'}, {'CustomerKey': 11008, 'GeographyKey': 32, 'CustomerAlternateKey': 'AW00011008', 'Title': None, 'FirstName': 'Rob', 'MiddleName': None, 'LastName': 'Verhoff', 'NameStyle': False, 'BirthDate': datetime.date(1975, 7, 4), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'F', 'EmailAddress': 'rob4@adventure-works.com', 'YearlyIncome': 60000.0, 'TotalChildren': 4, 'NumberChildrenAtHome': 4, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 3, 'AddressLine1': '624 Peabody Road', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0164', 'DateFirstPurchase': datetime.date(2011, 1, 25), 'CommuteDistance': '10+ Miles'}, {'CustomerKey': 11009, 'GeographyKey': 25, 'CustomerAlternateKey': 'AW00011009', 'Title': None, 'FirstName': 'Shannon', 'MiddleName': 'C', 'LastName': 'Carlson', 'NameStyle': False, 'BirthDate': datetime.date(1969, 9, 29), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'M', 'EmailAddress': 'shannon38@adventure-works.com', 'YearlyIncome': 70000.0, 'TotalChildren': 0, 'NumberChildrenAtHome': 0, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '0', 'NumberCarsOwned': 1, 'AddressLine1': '3839 Northgate Road', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0110', 'DateFirstPurchase': datetime.date(2011, 1, 27), 'CommuteDistance': '5-10 Miles'}]</msg>
+<status status="PASS" starttime="20191226 21:51:44.340" endtime="20191226 21:51:44.341"></status>
+</kw>
+<kw name="Read Query" library="MicrosoftDataLibrary">
+<arguments>
+<arg>SELECT TOP 10 * FROM dbo.DimCustomer</arg>
+</arguments>
+<assign>
+<var>${dict}</var>
+</assign>
+<msg timestamp="20191226 21:51:44.364" level="INFO">${dict} = [{'CustomerKey': 11000, 'GeographyKey': 26, 'CustomerAlternateKey': 'AW00011000', 'Title': None, 'FirstName': 'Jon', 'MiddleName': 'V', 'LastName': 'Yang', 'NameStyle': False, 'BirthDate': datetime.da...</msg>
+<status status="PASS" starttime="20191226 21:51:44.343" endtime="20191226 21:51:44.365"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${dict}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:44.368" level="INFO">[{'CustomerKey': 11000, 'GeographyKey': 26, 'CustomerAlternateKey': 'AW00011000', 'Title': None, 'FirstName': 'Jon', 'MiddleName': 'V', 'LastName': 'Yang', 'NameStyle': False, 'BirthDate': datetime.date(1971, 10, 6), 'MaritalStatus': 'M', 'Suffix': None, 'Gender': 'M', 'EmailAddress': 'jon24@adventure-works.com', 'YearlyIncome': 90000.0, 'TotalChildren': 2, 'NumberChildrenAtHome': 0, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 0, 'AddressLine1': '3761 N. 14th St', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0162', 'DateFirstPurchase': datetime.date(2011, 1, 19), 'CommuteDistance': '1-2 Miles'}, {'CustomerKey': 11001, 'GeographyKey': 37, 'CustomerAlternateKey': 'AW00011001', 'Title': None, 'FirstName': 'Eugene', 'MiddleName': 'L', 'LastName': 'Huang', 'NameStyle': False, 'BirthDate': datetime.date(1976, 5, 10), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'M', 'EmailAddress': 'eugene10@adventure-works.com', 'YearlyIncome': 60000.0, 'TotalChildren': 3, 'NumberChildrenAtHome': 3, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '0', 'NumberCarsOwned': 1, 'AddressLine1': '2243 W St.', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0110', 'DateFirstPurchase': datetime.date(2011, 1, 15), 'CommuteDistance': '0-1 Miles'}, {'CustomerKey': 11002, 'GeographyKey': 31, 'CustomerAlternateKey': 'AW00011002', 'Title': None, 'FirstName': 'Ruben', 'MiddleName': None, 'LastName': 'Torres', 'NameStyle': False, 'BirthDate': datetime.date(1971, 2, 9), 'MaritalStatus': 'M', 'Suffix': None, 'Gender': 'M', 'EmailAddress': 'ruben35@adventure-works.com', 'YearlyIncome': 60000.0, 'TotalChildren': 3, 'NumberChildrenAtHome': 3, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 1, 'AddressLine1': '5844 Linden Land', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0184', 'DateFirstPurchase': datetime.date(2011, 1, 7), 'CommuteDistance': '2-5 Miles'}, {'CustomerKey': 11003, 'GeographyKey': 11, 'CustomerAlternateKey': 'AW00011003', 'Title': None, 'FirstName': 'Christy', 'MiddleName': None, 'LastName': 'Zhu', 'NameStyle': False, 'BirthDate': datetime.date(1973, 8, 14), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'F', 'EmailAddress': 'christy12@adventure-works.com', 'YearlyIncome': 70000.0, 'TotalChildren': 0, 'NumberChildrenAtHome': 0, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '0', 'NumberCarsOwned': 1, 'AddressLine1': '1825 Village Pl.', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0162', 'DateFirstPurchase': datetime.date(2010, 12, 29), 'CommuteDistance': '5-10 Miles'}, {'CustomerKey': 11004, 'GeographyKey': 19, 'CustomerAlternateKey': 'AW00011004', 'Title': None, 'FirstName': 'Elizabeth', 'MiddleName': None, 'LastName': 'Johnson', 'NameStyle': False, 'BirthDate': datetime.date(1979, 8, 5), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'F', 'EmailAddress': 'elizabeth5@adventure-works.com', 'YearlyIncome': 80000.0, 'TotalChildren': 5, 'NumberChildrenAtHome': 5, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 4, 'AddressLine1': '7553 Harness Circle', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0131', 'DateFirstPurchase': datetime.date(2011, 1, 23), 'CommuteDistance': '1-2 Miles'}, {'CustomerKey': 11005, 'GeographyKey': 22, 'CustomerAlternateKey': 'AW00011005', 'Title': None, 'FirstName': 'Julio', 'MiddleName': None, 'LastName': 'Ruiz', 'NameStyle': False, 'BirthDate': datetime.date(1976, 8, 1), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'M', 'EmailAddress': 'julio1@adventure-works.com', 'YearlyIncome': 70000.0, 'TotalChildren': 0, 'NumberChildrenAtHome': 0, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 1, 'AddressLine1': '7305 Humphrey Drive', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0151', 'DateFirstPurchase': datetime.date(2010, 12, 30), 'CommuteDistance': '5-10 Miles'}, {'CustomerKey': 11006, 'GeographyKey': 8, 'CustomerAlternateKey': 'AW00011006', 'Title': None, 'FirstName': 'Janet', 'MiddleName': 'G', 'LastName': 'Alvarez', 'NameStyle': False, 'BirthDate': datetime.date(1976, 12, 2), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'F', 'EmailAddress': 'janet9@adventure-works.com', 'YearlyIncome': 70000.0, 'TotalChildren': 0, 'NumberChildrenAtHome': 0, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 1, 'AddressLine1': '2612 Berry Dr', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0184', 'DateFirstPurchase': datetime.date(2011, 1, 24), 'CommuteDistance': '5-10 Miles'}, {'CustomerKey': 11007, 'GeographyKey': 40, 'CustomerAlternateKey': 'AW00011007', 'Title': None, 'FirstName': 'Marco', 'MiddleName': None, 'LastName': 'Mehta', 'NameStyle': False, 'BirthDate': datetime.date(1969, 11, 6), 'MaritalStatus': 'M', 'Suffix': None, 'Gender': 'M', 'EmailAddress': 'marco14@adventure-works.com', 'YearlyIncome': 60000.0, 'TotalChildren': 3, 'NumberChildrenAtHome': 3, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 2, 'AddressLine1': '942 Brook Street', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0126', 'DateFirstPurchase': datetime.date(2011, 1, 9), 'CommuteDistance': '0-1 Miles'}, {'CustomerKey': 11008, 'GeographyKey': 32, 'CustomerAlternateKey': 'AW00011008', 'Title': None, 'FirstName': 'Rob', 'MiddleName': None, 'LastName': 'Verhoff', 'NameStyle': False, 'BirthDate': datetime.date(1975, 7, 4), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'F', 'EmailAddress': 'rob4@adventure-works.com', 'YearlyIncome': 60000.0, 'TotalChildren': 4, 'NumberChildrenAtHome': 4, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '1', 'NumberCarsOwned': 3, 'AddressLine1': '624 Peabody Road', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0164', 'DateFirstPurchase': datetime.date(2011, 1, 25), 'CommuteDistance': '10+ Miles'}, {'CustomerKey': 11009, 'GeographyKey': 25, 'CustomerAlternateKey': 'AW00011009', 'Title': None, 'FirstName': 'Shannon', 'MiddleName': 'C', 'LastName': 'Carlson', 'NameStyle': False, 'BirthDate': datetime.date(1969, 9, 29), 'MaritalStatus': 'S', 'Suffix': None, 'Gender': 'M', 'EmailAddress': 'shannon38@adventure-works.com', 'YearlyIncome': 70000.0, 'TotalChildren': 0, 'NumberChildrenAtHome': 0, 'EnglishEducation': 'Bachelors', 'SpanishEducation': 'Licenciatura', 'FrenchEducation': 'Bac + 4', 'EnglishOccupation': 'Professional', 'SpanishOccupation': 'Profesional', 'FrenchOccupation': 'Cadre', 'HouseOwnerFlag': '0', 'NumberCarsOwned': 1, 'AddressLine1': '3839 Northgate Road', 'AddressLine2': None, 'Phone': '1 (11) 500 555-0110', 'DateFirstPurchase': datetime.date(2011, 1, 27), 'CommuteDistance': '5-10 Miles'}]</msg>
+<status status="PASS" starttime="20191226 21:51:44.366" endtime="20191226 21:51:44.368"></status>
+</kw>
+<kw name="Read Scalar" library="MicrosoftDataLibrary">
+<arguments>
+<arg>SELECT COUNT(*) FROM dbo.DimCustomer</arg>
+</arguments>
+<assign>
+<var>${rec_count}</var>
+</assign>
+<msg timestamp="20191226 21:51:44.387" level="INFO">${rec_count} = 18484</msg>
+<status status="PASS" starttime="20191226 21:51:44.370" endtime="20191226 21:51:44.387"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${rec_count}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:44.390" level="INFO">18484</msg>
+<status status="PASS" starttime="20191226 21:51:44.389" endtime="20191226 21:51:44.390"></status>
+</kw>
+<kw name="Read Scalar" library="MicrosoftDataLibrary">
+<arguments>
+<arg>SELECT * FROM dbo.DimCustomer</arg>
+</arguments>
+<assign>
+<var>${non_scalar}</var>
+</assign>
+<msg timestamp="20191226 21:51:45.717" level="INFO">${non_scalar} = 11000</msg>
+<status status="PASS" starttime="20191226 21:51:44.392" endtime="20191226 21:51:45.717"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${non_scalar}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:45.719" level="INFO">11000</msg>
+<status status="PASS" starttime="20191226 21:51:45.719" endtime="20191226 21:51:45.719"></status>
+</kw>
+<kw name="List Tables" library="MicrosoftDataLibrary">
+<arguments>
+<arg>dbo</arg>
+</arguments>
+<assign>
+<var>${tables}</var>
+</assign>
+<msg timestamp="20191226 21:51:45.770" level="INFO">${tables} = ['AdventureWorksDWBuildVersion', 'DatabaseLog', 'DimAccount', 'DimCurrency', 'DimCustomer', 'DimDate', 'DimDepartmentGroup', 'DimEmployee', 'DimGeography', 'DimOrganization', 'DimProduct', 'DimProduct...</msg>
+<status status="PASS" starttime="20191226 21:51:45.721" endtime="20191226 21:51:45.770"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${tables}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:45.773" level="INFO">['AdventureWorksDWBuildVersion', 'DatabaseLog', 'DimAccount', 'DimCurrency', 'DimCustomer', 'DimDate', 'DimDepartmentGroup', 'DimEmployee', 'DimGeography', 'DimOrganization', 'DimProduct', 'DimProductCategory', 'DimProductSubcategory', 'DimPromotion', 'DimReseller', 'DimSalesReason', 'DimSalesTerritory', 'DimScenario', 'FactAdditionalInternationalProductDescription', 'FactCallCenter', 'FactCurrencyRate', 'FactFinance', 'FactInternetSales', 'FactInternetSalesReason', 'FactProductInventory', 'FactResellerSales', 'FactSalesQuota', 'FactSurveyResponse', 'NameAgeTable', 'NewFactCurrencyRate', 'ProspectiveBuyer', 'sysdiagrams']</msg>
+<status status="PASS" starttime="20191226 21:51:45.772" endtime="20191226 21:51:45.773"></status>
+</kw>
+<kw name="Table Exists" library="MicrosoftDataLibrary">
+<arguments>
+<arg>dbo</arg>
+<arg>DimCustomer</arg>
+</arguments>
+<assign>
+<var>${exists}</var>
+</assign>
+<msg timestamp="20191226 21:51:45.789" level="INFO">${exists} = True</msg>
+<status status="PASS" starttime="20191226 21:51:45.777" endtime="20191226 21:51:45.789"></status>
+</kw>
+<kw name="Should Be True" library="BuiltIn">
+<doc>Fails if the given condition is not true.</doc>
+<arguments>
+<arg>${exists}</arg>
+</arguments>
+<status status="PASS" starttime="20191226 21:51:45.790" endtime="20191226 21:51:45.791"></status>
+</kw>
+<kw name="Disconnect from Databases" library="common" type="teardown">
+<kw name="Disconnect All" library="MicrosoftDataLibrary">
+<status status="PASS" starttime="20191226 21:51:45.793" endtime="20191226 21:51:45.795"></status>
+</kw>
+<status status="PASS" starttime="20191226 21:51:45.793" endtime="20191226 21:51:45.795"></status>
+</kw>
+<tags>
+<tag>Database</tag>
+<tag>SQL Server</tag>
+<tag>windows</tag>
+</tags>
+<status status="PASS" starttime="20191226 21:51:44.096" endtime="20191226 21:51:45.796" critical="yes"></status>
+</test>
+<test id="s1-s1-t3" name="Load data fixtures">
+<kw name="Connect to Database" library="common" type="setup">
+<arguments>
+<arg>AdventureWorks</arg>
+<arg>${connection_string}</arg>
+</arguments>
+<kw name="Connect" library="MicrosoftDataLibrary">
+<arguments>
+<arg>${name}</arg>
+<arg>${alchemy_connection_string}</arg>
+</arguments>
+<status status="PASS" starttime="20191226 21:51:45.804" endtime="20191226 21:51:45.806"></status>
+</kw>
+<status status="PASS" starttime="20191226 21:51:45.803" endtime="20191226 21:51:45.806"></status>
+</kw>
+<kw name="Get File" library="OperatingSystem">
+<doc>Returns the contents of a specified file.</doc>
+<arguments>
+<arg>${FIXTURE}</arg>
+</arguments>
+<assign>
+<var>${fixture_contents}</var>
+</assign>
+<msg timestamp="20191226 21:51:45.808" level="INFO" html="yes">Getting file '&lt;a href="file://C:\Users\markp\PycharmProjects\test-framework\atest\testdata\test.csv"&gt;C:\Users\markp\PycharmProjects\test-framework\atest\testdata\test.csv&lt;/a&gt;'.</msg>
+<msg timestamp="20191226 21:51:45.809" level="INFO">${fixture_contents} = name,age,birthdate
+Mark Stella,39,02-13-1980
+Takuya Truong,39,11-15-1980
+Donal Trump,73,06-14-1946</msg>
+<status status="PASS" starttime="20191226 21:51:45.807" endtime="20191226 21:51:45.809"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${fixture_contents}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:45.811" level="INFO">name,age,birthdate
+Mark Stella,39,02-13-1980
+Takuya Truong,39,11-15-1980
+Donal Trump,73,06-14-1946</msg>
+<status status="PASS" starttime="20191226 21:51:45.810" endtime="20191226 21:51:45.811"></status>
+</kw>
+<kw name="Truncate Table" library="MicrosoftDataLibrary">
+<arguments>
+<arg>dbo</arg>
+<arg>NameAgeTable</arg>
+</arguments>
+<status status="PASS" starttime="20191226 21:51:45.812" endtime="20191226 21:51:45.860"></status>
+</kw>
+<kw name="Row Count" library="MicrosoftDataLibrary">
+<arguments>
+<arg>dbo</arg>
+<arg>NameAgeTable</arg>
+</arguments>
+<assign>
+<var>${row_count}</var>
+</assign>
+<msg timestamp="20191226 21:51:45.940" level="INFO">${row_count} = 0</msg>
+<status status="PASS" starttime="20191226 21:51:45.863" endtime="20191226 21:51:45.940"></status>
+</kw>
+<kw name="Should Be Equal As Integers" library="BuiltIn">
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<arguments>
+<arg>${row_count}</arg>
+<arg>0</arg>
+</arguments>
+<msg timestamp="20191226 21:51:45.945" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;type 'unicode'&gt;</msg>
+<status status="PASS" starttime="20191226 21:51:45.943" endtime="20191226 21:51:45.945"></status>
+</kw>
+<kw name="Load Table With Csv" library="MicrosoftDataLibrary">
+<arguments>
+<arg>${FIXTURE}</arg>
+<arg>dbo</arg>
+<arg>NameAgeTable</arg>
+</arguments>
+<assign>
+<var>${row_count}</var>
+</assign>
+<msg timestamp="20191226 21:51:46.109" level="INFO">${row_count} = 3</msg>
+<status status="PASS" starttime="20191226 21:51:45.951" endtime="20191226 21:51:46.109"></status>
+</kw>
+<kw name="Should Not Be Equal As Integers" library="BuiltIn">
+<doc>Fails if objects are equal after converting them to integers.</doc>
+<arguments>
+<arg>${row_count}</arg>
+<arg>0</arg>
+</arguments>
+<msg timestamp="20191226 21:51:46.112" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;type 'unicode'&gt;</msg>
+<status status="PASS" starttime="20191226 21:51:46.111" endtime="20191226 21:51:46.113"></status>
+</kw>
+<kw name="Read Query" library="MicrosoftDataLibrary">
+<arguments>
+<arg>SELECT * FROM dbo.NameAgeTable</arg>
+</arguments>
+<assign>
+<var>${records}</var>
+</assign>
+<msg timestamp="20191226 21:51:46.194" level="INFO">${records} = [{'name': 'Mark Stella', 'age': 39, 'birthdate': Timestamp('1980-02-13 00:00:00')}, {'name': 'Takuya Truong', 'age': 39, 'birthdate': Timestamp('1980-11-15 00:00:00')}, {'name': 'Donal Trump', 'age': ...</msg>
+<status status="PASS" starttime="20191226 21:51:46.115" endtime="20191226 21:51:46.194"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${records}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:46.199" level="INFO">[{'name': 'Mark Stella', 'age': 39, 'birthdate': Timestamp('1980-02-13 00:00:00')}, {'name': 'Takuya Truong', 'age': 39, 'birthdate': Timestamp('1980-11-15 00:00:00')}, {'name': 'Donal Trump', 'age': 73, 'birthdate': Timestamp('1946-06-14 00:00:00')}]</msg>
+<status status="PASS" starttime="20191226 21:51:46.198" endtime="20191226 21:51:46.200"></status>
+</kw>
+<kw name="Read Table" library="MicrosoftDataLibrary">
+<arguments>
+<arg>dbo</arg>
+<arg>NameAgeTable</arg>
+</arguments>
+<assign>
+<var>${records2}</var>
+</assign>
+<msg timestamp="20191226 21:51:46.218" level="INFO">${records2} = [{'name': 'Mark Stella', 'age': 39, 'birthdate': Timestamp('1980-02-13 00:00:00')}, {'name': 'Takuya Truong', 'age': 39, 'birthdate': Timestamp('1980-11-15 00:00:00')}, {'name': 'Donal Trump', 'age': ...</msg>
+<status status="PASS" starttime="20191226 21:51:46.201" endtime="20191226 21:51:46.218"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${records2}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:46.222" level="INFO">[{'name': 'Mark Stella', 'age': 39, 'birthdate': Timestamp('1980-02-13 00:00:00')}, {'name': 'Takuya Truong', 'age': 39, 'birthdate': Timestamp('1980-11-15 00:00:00')}, {'name': 'Donal Trump', 'age': 73, 'birthdate': Timestamp('1946-06-14 00:00:00')}]</msg>
+<status status="PASS" starttime="20191226 21:51:46.220" endtime="20191226 21:51:46.222"></status>
+</kw>
+<kw name="Get Table Metadata" library="MicrosoftDataLibrary">
+<arguments>
+<arg>dbo</arg>
+<arg>NameAgeTable</arg>
+</arguments>
+<assign>
+<var>${metadata}</var>
+</assign>
+<msg timestamp="20191226 21:51:46.538" level="INFO">${metadata} = [{'name': 'name', 'type': VARCHAR(length=50, collation='SQL_Latin1_General_CP1_CI_AS'), 'nullable': True, 'default': None, 'autoincrement': False}, {'name': 'age', 'type': INTEGER(), 'nullable': True,...</msg>
+<status status="PASS" starttime="20191226 21:51:46.224" endtime="20191226 21:51:46.538"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${metadata}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:46.541" level="INFO">[{'name': 'name', 'type': VARCHAR(length=50, collation='SQL_Latin1_General_CP1_CI_AS'), 'nullable': True, 'default': None, 'autoincrement': False}, {'name': 'age', 'type': INTEGER(), 'nullable': True, 'default': None, 'autoincrement': False}, {'name': 'birthdate', 'type': DATETIME(), 'nullable': True, 'default': None, 'autoincrement': False}]</msg>
+<status status="PASS" starttime="20191226 21:51:46.540" endtime="20191226 21:51:46.541"></status>
+</kw>
+<kw name="Disconnect from Databases" library="common" type="teardown">
+<kw name="Disconnect All" library="MicrosoftDataLibrary">
+<status status="PASS" starttime="20191226 21:51:46.543" endtime="20191226 21:51:46.544"></status>
+</kw>
+<status status="PASS" starttime="20191226 21:51:46.542" endtime="20191226 21:51:46.545"></status>
+</kw>
+<tags>
+<tag>Database</tag>
+<tag>SQL Server</tag>
+<tag>windows</tag>
+</tags>
+<status status="PASS" starttime="20191226 21:51:45.801" endtime="20191226 21:51:46.546" critical="yes"></status>
+</test>
+<test id="s1-s1-t4" name="Play with Procedures and Functions">
+<kw name="Connect to Database" library="common" type="setup">
+<arguments>
+<arg>AdventureWorks</arg>
+<arg>${connection_string}</arg>
+</arguments>
+<kw name="Connect" library="MicrosoftDataLibrary">
+<arguments>
+<arg>${name}</arg>
+<arg>${alchemy_connection_string}</arg>
+</arguments>
+<status status="PASS" starttime="20191226 21:51:46.552" endtime="20191226 21:51:46.553"></status>
+</kw>
+<status status="PASS" starttime="20191226 21:51:46.552" endtime="20191226 21:51:46.553"></status>
+</kw>
+<kw name="List Functions" library="MicrosoftDataLibrary">
+<assign>
+<var>${functions}</var>
+</assign>
+<msg timestamp="20191226 21:51:46.661" level="INFO">${functions} = ['udfBuildISO8601Date' 'udfMinimumDate' 'udfTwoDigitZeroFill']</msg>
+<status status="PASS" starttime="20191226 21:51:46.555" endtime="20191226 21:51:46.661"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${functions}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:46.664" level="INFO">['udfBuildISO8601Date' 'udfMinimumDate' 'udfTwoDigitZeroFill']</msg>
+<status status="PASS" starttime="20191226 21:51:46.663" endtime="20191226 21:51:46.665"></status>
+</kw>
+<kw name="List Procedures" library="MicrosoftDataLibrary">
+<assign>
+<var>${procs}</var>
+</assign>
+<msg timestamp="20191226 21:51:46.767" level="INFO">${procs} = ['SelectAllCustomers' 'SelectAllCustomersWithTotalChildren']</msg>
+<status status="PASS" starttime="20191226 21:51:46.669" endtime="20191226 21:51:46.768"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${procs}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:46.771" level="INFO">['SelectAllCustomers' 'SelectAllCustomersWithTotalChildren']</msg>
+<status status="PASS" starttime="20191226 21:51:46.770" endtime="20191226 21:51:46.771"></status>
+</kw>
+<kw name="Read Query" library="MicrosoftDataLibrary">
+<arguments>
+<arg>select dbo.udfTwoDigitZeroFill(1)</arg>
+</arguments>
+<assign>
+<var>${result}</var>
+</assign>
+<msg timestamp="20191226 21:51:46.843" level="INFO">${result} = [{'': '01'}]</msg>
+<status status="PASS" starttime="20191226 21:51:46.773" endtime="20191226 21:51:46.843"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${result}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:46.846" level="INFO">[{'': '01'}]</msg>
+<status status="PASS" starttime="20191226 21:51:46.846" endtime="20191226 21:51:46.847"></status>
+</kw>
+<kw name="Execute Procedure" library="MicrosoftDataLibrary">
+<arguments>
+<arg>SelectAllCustomers</arg>
+</arguments>
+<assign>
+<var>${result2}</var>
+</assign>
+<msg timestamp="20191226 21:51:47.655" level="INFO">${result2} =           0    1           2     3          4     5        6      7           8  9   ...            19              20       21 22  23                         24    25                   26          27...</msg>
+<status status="PASS" starttime="20191226 21:51:46.849" endtime="20191226 21:51:47.656"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${result2}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:47.774" level="INFO">          0    1           2     3          4     5        6      7           8  9   ...            19              20       21 22  23                         24    25                   26          27          28
+0      11000   26  AW00011000  None        Jon     V     Yang  False  1971-10-06  M  ...  Professional     Profesional    Cadre  1   0            3761 N. 14th St  None  1 (11) 500 555-0162  2011-01-19   1-2 Miles
+1      11001   37  AW00011001  None     Eugene     L    Huang  False  1976-05-10  S  ...  Professional     Profesional    Cadre  0   1                 2243 W St.  None  1 (11) 500 555-0110  2011-01-15   0-1 Miles
+2      11002   31  AW00011002  None      Ruben  None   Torres  False  1971-02-09  M  ...  Professional     Profesional    Cadre  1   1           5844 Linden Land  None  1 (11) 500 555-0184  2011-01-07   2-5 Miles
+3      11003   11  AW00011003  None    Christy  None      Zhu  False  1973-08-14  S  ...  Professional     Profesional    Cadre  0   1           1825 Village Pl.  None  1 (11) 500 555-0162  2010-12-29  5-10 Miles
+4      11004   19  AW00011004  None  Elizabeth  None  Johnson  False  1979-08-05  S  ...  Professional     Profesional    Cadre  1   4        7553 Harness Circle  None  1 (11) 500 555-0131  2011-01-23   1-2 Miles
+...      ...  ...         ...   ...        ...   ...      ...    ...         ... ..  ...           ...             ...      ... ..  ..                        ...   ...                  ...         ...         ...
+18479  29479  209  AW00029479  None      Tommy     L     Tang  False  1969-06-30  M  ...      Clerical  Administrativo  Employé  1   0          111, rue Maillard  None  1 (11) 500 555-0136  2012-09-04   0-1 Miles
+18480  29480  248  AW00029480  None       Nina     W     Raji  False  1977-05-06  S  ...      Clerical  Administrativo  Employé  1   0          9 Katherine Drive  None  1 (11) 500 555-0146  2013-07-17   0-1 Miles
+18481  29481  120  AW00029481  None       Ivan  None     Suri  False  1965-07-04  S  ...      Clerical  Administrativo  Employé  0   0                Knaackstr 4  None  1 (11) 500 555-0144  2011-08-13   0-1 Miles
+18482  29482  179  AW00029482  None    Clayton  None    Zhang  False  1964-09-01  M  ...      Clerical  Administrativo  Employé  1   0     1080, quai de Grenelle  None  1 (11) 500 555-0137  2012-09-18   0-1 Miles
+18483  29483  217  AW00029483  None      Jésus     L  Navarro  False  1965-06-06  M  ...      Clerical  Administrativo  Employé  1   0  244, rue de la Centenaire  None  1 (11) 500 555-0141  2012-09-09   0-1 Miles
+
+[18484 rows x 29 columns]</msg>
+<status status="PASS" starttime="20191226 21:51:47.657" endtime="20191226 21:51:47.774"></status>
+</kw>
+<kw name="Create List" library="BuiltIn">
+<doc>Returns a list containing given items.</doc>
+<arguments>
+<arg>1</arg>
+</arguments>
+<assign>
+<var>${params}</var>
+</assign>
+<msg timestamp="20191226 21:51:47.777" level="INFO">${params} = ['1']</msg>
+<status status="PASS" starttime="20191226 21:51:47.776" endtime="20191226 21:51:47.777"></status>
+</kw>
+<kw name="Execute Procedure" library="MicrosoftDataLibrary">
+<arguments>
+<arg>SelectAllCustomersWithTotalChildren</arg>
+<arg>${params}</arg>
+</arguments>
+<assign>
+<var>${result3}</var>
+</assign>
+<msg timestamp="20191226 21:51:47.993" level="INFO">${result3} =          0    1           2     3        4     5        6      7           8   ...                    20          21 22 23                           24    25                   26          27          ...</msg>
+<status status="PASS" starttime="20191226 21:51:47.778" endtime="20191226 21:51:47.993"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${result3}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:48.072" level="INFO">         0    1           2     3        4     5        6      7           8   ...                    20          21 22 23                           24    25                   26          27          28
+0     11094   33  AW00011094  None   Cedric     W       Ma  False  1967-09-29  ...  Obrero especializado  Technicien  0  1         3407 Oak Brook Place  None  1 (11) 500 555-0115  2013-04-07   0-1 Miles
+1     11095   13  AW00011095  None     Chad  None    Kumar  False  1968-02-29  ...  Obrero especializado  Technicien  1  1          1681 Lighthouse Way  None  1 (11) 500 555-0151  2011-04-01  5-10 Miles
+2     11096   12  AW00011096  None   Andrés  None    Anand  False  1968-02-07  ...           Profesional       Cadre  1  1           5423 Los Gatos Ct.  None  1 (11) 500 555-0184  2011-04-11  5-10 Miles
+3     11097   40  AW00011097  None    Edwin     R     Nara  False  1972-10-23  ...  Obrero especializado  Technicien  1  1              719 William Way  None  1 (11) 500 555-0112  2011-04-04  5-10 Miles
+4     11098   14  AW00011098  None  Mallory     S    Rubio  False  1966-10-29  ...  Obrero especializado  Technicien  0  1           6452 Harris Circle  None  1 (11) 500 555-0157  2013-02-11   0-1 Miles
+...     ...  ...         ...   ...      ...   ...      ...    ...         ...  ...                   ...         ... .. ..                          ...   ...                  ...         ...         ...
+3614  29470  221  AW00029470  None   Nathan  None  Roberts  False  1971-08-22  ...                Obrero     Ouvrier  0  1  29, boulevard Beau Marchais  None  1 (11) 500 555-0111  2013-12-05   1-2 Miles
+3615  29471  186  AW00029471  None     Dana  None   Ortega  False  1965-09-23  ...                Obrero     Ouvrier  0  1        80, rue de Fontfroide  None  1 (11) 500 555-0148  2014-01-21   2-5 Miles
+3616  29472  193  AW00029472  None    Lacey     M   Sharma  False  1965-09-11  ...                Obrero     Ouvrier  0  1            21, avenue Reille  None  1 (11) 500 555-0178  2013-09-01   1-2 Miles
+3617  29473  262  AW00029473  None   Carmen     J   Subram  False  1965-11-19  ...                Obrero     Ouvrier  0  0             6467 Buena Vista  None  1 (11) 500 555-0129  2013-06-03   2-5 Miles
+3618  29479  209  AW00029479  None    Tommy     L     Tang  False  1969-06-30  ...        Administrativo     Employé  1  0            111, rue Maillard  None  1 (11) 500 555-0136  2012-09-04   0-1 Miles
+
+[3619 rows x 29 columns]</msg>
+<status status="PASS" starttime="20191226 21:51:47.994" endtime="20191226 21:51:48.072"></status>
+</kw>
+<kw name="Disconnect from Databases" library="common" type="teardown">
+<kw name="Disconnect All" library="MicrosoftDataLibrary">
+<status status="PASS" starttime="20191226 21:51:48.074" endtime="20191226 21:51:48.076"></status>
+</kw>
+<status status="PASS" starttime="20191226 21:51:48.074" endtime="20191226 21:51:48.076"></status>
+</kw>
+<tags>
+<tag>Database</tag>
+<tag>SQL Server</tag>
+<tag>windows</tag>
+</tags>
+<status status="PASS" starttime="20191226 21:51:46.550" endtime="20191226 21:51:48.077" critical="yes"></status>
+</test>
+<test id="s1-s1-t5" name="Play with the SSIS Catalog">
+<kw name="Connect to Database" library="common" type="setup">
+<arguments>
+<arg>AdventureWorks</arg>
+<arg>${connection_string}</arg>
+</arguments>
+<kw name="Connect" library="MicrosoftDataLibrary">
+<arguments>
+<arg>${name}</arg>
+<arg>${alchemy_connection_string}</arg>
+</arguments>
+<status status="PASS" starttime="20191226 21:51:48.083" endtime="20191226 21:51:48.084"></status>
+</kw>
+<status status="PASS" starttime="20191226 21:51:48.083" endtime="20191226 21:51:48.084"></status>
+</kw>
+<kw name="Connect To Ssis Catalog" library="MicrosoftDataLibrary">
+<arguments>
+<arg>${ssis_connection_string}</arg>
+</arguments>
+<status status="PASS" starttime="20191226 21:51:48.085" endtime="20191226 21:51:48.087"></status>
+</kw>
+<kw name="Get Ssis Catalog Properties" library="MicrosoftDataLibrary">
+<assign>
+<var>${catalog_properties}</var>
+</assign>
+<msg timestamp="20191226 21:51:48.220" level="INFO">${catalog_properties} = {'DEFAULT_EXECUTION_MODE': '0', 'ENCRYPTION_ALGORITHM': 'AES_256', 'MAX_PROJECT_VERSIONS': '10', 'OPERATION_CLEANUP_ENABLED': 'TRUE', 'RETENTION_WINDOW': '365', 'SCHEMA_BUILD': '15.0.2070.41', 'SCHEMA...</msg>
+<status status="PASS" starttime="20191226 21:51:48.089" endtime="20191226 21:51:48.220"></status>
+</kw>
+<kw name="Log" library="BuiltIn">
+<doc>Logs the given message with the given level.</doc>
+<arguments>
+<arg>${catalog_properties}</arg>
+</arguments>
+<msg timestamp="20191226 21:51:48.222" level="INFO">{'DEFAULT_EXECUTION_MODE': '0', 'ENCRYPTION_ALGORITHM': 'AES_256', 'MAX_PROJECT_VERSIONS': '10', 'OPERATION_CLEANUP_ENABLED': 'TRUE', 'RETENTION_WINDOW': '365', 'SCHEMA_BUILD': '15.0.2070.41', 'SCHEMA_VERSION': '6', 'SERVER_CUSTOMIZED_LOGGING_LEVEL': '', 'SERVER_LOGGING_LEVEL': '1', 'SERVER_OPERATION_ENCRYPTION_LEVEL': '2', 'UPGRADE_FROM': '15.0.2000.5', 'VERSION_CLEANUP_ENABLED': 'TRUE'}</msg>
+<status status="PASS" starttime="20191226 21:51:48.222" endtime="20191226 21:51:48.223"></status>
+</kw>
+<kw name="Disconnect from Databases" library="common" type="teardown">
+<kw name="Disconnect All" library="MicrosoftDataLibrary">
+<status status="PASS" starttime="20191226 21:51:48.225" endtime="20191226 21:51:48.226"></status>
+</kw>
+<status status="PASS" starttime="20191226 21:51:48.224" endtime="20191226 21:51:48.227"></status>
+</kw>
+<tags>
+<tag>Database</tag>
+<tag>SQL Server</tag>
+<tag>windows</tag>
+</tags>
+<status status="PASS" starttime="20191226 21:51:48.081" endtime="20191226 21:51:48.228" critical="yes"></status>
+</test>
+<status status="PASS" starttime="20191226 21:51:42.825" endtime="20191226 21:51:48.233"></status>
+</suite>
+<status status="PASS" starttime="20191226 21:51:42.795" endtime="20191226 21:51:48.243"></status>
+</suite>
+<statistics>
+<total>
+<stat pass="5" fail="0">Critical Tests</stat>
+<stat pass="5" fail="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="5" fail="0">Database</stat>
+<stat pass="5" fail="0">SQL Server</stat>
+<stat pass="5" fail="0">windows</stat>
+</tag>
+<suite>
+<stat pass="5" fail="0" id="s1" name="Atest">Atest</stat>
+<stat pass="5" fail="0" id="s1-s1" name="Sql Server Tests">Atest.Sql Server Tests</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
