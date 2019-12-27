@@ -90,9 +90,13 @@ class MicrosoftDataLibrary:
     @keyword
     def disconnect(self) -> None:
         """Disconnect current active connection"""
-        self.current_connection.disconnect()
-        del self.__connections[self.current_connection_name()]
-        self.__current_connection = None
+        try:
+            self.current_connection.disconnect()
+        except Exception:
+            pass
+        finally:
+            del self.__connections[self.current_connection_name()]
+            self.__current_connection = None
 
     @keyword(types={"connection_name": str})
     def switch_connection(self, connection_name: str) -> str:
@@ -118,7 +122,7 @@ class MicrosoftDataLibrary:
     @keyword
     def list_connections(self) -> List[str]:
         """Get list of all registered connections."""
-        return self.__connections.keys()
+        return list(self.__connections.keys())
 
     @keyword(types={"query": str})
     def execute_query(self, query: str) -> None:
