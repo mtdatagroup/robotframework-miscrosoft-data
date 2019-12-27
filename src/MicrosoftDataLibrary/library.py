@@ -21,22 +21,22 @@ class MicrosoftDataLibrary:
 
     def __init__(self, use_pandas: bool = False) -> None:
         """use_pandas = True will return all query results as a Panda Dataframe"""
-        self.__current_connection = None
-        self.__connections = {}
-        self.__use_pandas = use_pandas
-        self.__ssis_catalog_client = None
+        self._current_connection = None
+        self._connections = {}
+        self._use_pandas = use_pandas
+        self._ssis_catalog_client = None
 
     @property
     def ssis_catalog_client(self) -> DatabaseClient:
-        if self.__ssis_catalog_client is None:
+        if self._ssis_catalog_client is None:
             raise RuntimeError("No connection to the SSIS Catalog been established")
-        return self.__ssis_catalog_client
+        return self._ssis_catalog_client
 
     @property
     def current_connection(self) -> DatabaseClient:
-        if self.__current_connection is None:
+        if self._current_connection is None:
             raise RuntimeError("No connection has been established")
-        return self.__current_connection
+        return self._current_connection
 
     @keyword(types={"use_pandas": bool})
     def use_pandas(self, use_pandas: bool) -> bool:
@@ -44,14 +44,14 @@ class MicrosoftDataLibrary:
 
         This will return the current setting.
         """
-        _orig = self.__use_pandas
-        self.__use_pandas = use_pandas
+        _orig = self._use_pandas
+        self._use_pandas = use_pandas
         return _orig
 
     @keyword
     def number_of_connections(self) -> int:
         """Retrieve the number of registered connections"""
-        return len(self.__connections)
+        return len(self._connections)
 
     @keyword(types={"connection_name": str, "connection_string": str})
     def connect(self, connection_name: str, connection_string: str) -> None:
@@ -59,8 +59,8 @@ class MicrosoftDataLibrary:
 
         Multiple connections are possible, so a connection name is required to switch between them.
         """
-        self.__connections[connection_name] = DatabaseClient(connection_string=connection_string)
-        self.__current_connection = self.__connections[connection_name]
+        self._connections[connection_name] = DatabaseClient(connection_string=connection_string)
+        self._current_connection = self._connections[connection_name]
 
     @keyword(types={"connection_string": str})
     def connect_to_ssis_catalog(self, connection_string: str) -> None:
@@ -68,24 +68,24 @@ class MicrosoftDataLibrary:
 
         There can only be one connection at a time.
         """
-        self.__ssis_catalog_client = DatabaseClient(connection_string=connection_string)
+        self._ssis_catalog_client = DatabaseClient(connection_string=connection_string)
 
     @keyword
     def disconnect_all(self) -> None:
         """Disconnect all registered connections, including any SSIS catalog connections"""
-        for connection in self.__connections.values():
+        for connection in self._connections.values():
             connection.disconnect()
-        self.__connections.clear()
-        self.__current_connection = None
+        self._connections.clear()
+        self._current_connection = None
 
         self.disconnect_from_ssis_catalog()
 
     @keyword
     def disconnect_from_ssis_catalog(self):
         """Disconnect from the SSIS Database catalog"""
-        if self.__ssis_catalog_client:
-            self.__ssis_catalog_client.disconnect()
-            self.__ssis_catalog_client = None
+        if self._ssis_catalog_client:
+            self._ssis_catalog_client.disconnect()
+            self._ssis_catalog_client = None
 
     @keyword
     def disconnect(self) -> None:
@@ -95,8 +95,8 @@ class MicrosoftDataLibrary:
         except Exception:
             pass
         finally:
-            del self.__connections[self.current_connection_name()]
-            self.__current_connection = None
+            del self._connections[self.current_connection_name()]
+            self._current_connection = None
 
     @keyword(types={"connection_name": str})
     def switch_connection(self, connection_name: str) -> str:
@@ -104,9 +104,9 @@ class MicrosoftDataLibrary:
 
         This will return the name of the active connection (if set)
         """
-        if connection_name in self.__connections:
-            _current_connection_name = self.current_connection_name() if self.__current_connection else ""
-            self.__current_connection = self.__connections[connection_name]
+        if connection_name in self._connections:
+            _current_connection_name = self.current_connection_name() if self._current_connection else ""
+            self._current_connection = self._connections[connection_name]
             return _current_connection_name
         else:
             raise RuntimeError(f"Connection '{connection_name}' is not established in connection pool")
@@ -114,15 +114,15 @@ class MicrosoftDataLibrary:
     @keyword
     def current_connection_name(self) -> str:
         """Get the current active connection name"""
-        for k, v in self.__connections.items():
-            if v == self.__current_connection:
+        for k, v in self._connections.items():
+            if v == self._current_connection:
                 return k
         raise RuntimeError("No connection has been established")
 
     @keyword
     def list_connections(self) -> List[str]:
         """Get list of all registered connections."""
-        return list(self.__connections.keys())
+        return list(self._connections.keys())
 
     @keyword(types={"query": str})
     def execute_query(self, query: str) -> None:
@@ -139,13 +139,13 @@ class MicrosoftDataLibrary:
     def read_query(self, query: str) -> Any:
         """Execute query and return result set"""
         df = self.current_connection.read_query(query)
-        return df if self.__use_pandas else df.to_dict(orient="records")
+        return df if self._use_pandas else df.to_dict(orient="records")
 
     @keyword(types={"query": str})
     def read_scalar(self, query: str) -> str:
         """Get single value back (first column from first record)"""
         res = self.read_query(query=query)
-        return res.iloc[0][0] if self.__use_pandas else list(res[0].values())[0]
+        return res.iloc[0][0] if self._use_pandas else list(res[0].values())[0]
 
     @keyword
     def list_schemas(self) -> List[str]:

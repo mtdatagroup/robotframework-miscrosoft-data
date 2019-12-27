@@ -1,11 +1,20 @@
 import unittest
 from unittest import mock
+from unittest.mock import PropertyMock, MagicMock
 
 from MicrosoftDataLibrary import MicrosoftDataLibrary
 from MicrosoftDataLibrary import DatabaseClient
+from pandas import DataFrame
 
 
 class TestMicrosoftDataLibrary(unittest.TestCase):
+
+    def setUp(self) -> None:
+
+        self.lib = MicrosoftDataLibrary()
+        self.mock_connection = MagicMock()
+        self.lib._connections = [self.mock_connection]
+        self.lib._current_connection = self.mock_connection
 
     @mock.patch.object(DatabaseClient, '__init__', return_value=None)
     def test_connections(self, mock_db) -> None:
@@ -30,7 +39,6 @@ class TestMicrosoftDataLibrary(unittest.TestCase):
         self.assertEquals(2, lib.number_of_connections())
 
         self.assertNotEqual(conn1, lib.current_connection)
-        conn2 = lib.current_connection
 
         self.assertEquals(['conn1', 'conn2'], lib.list_connections())
         self.assertEquals('conn2', lib.current_connection_name())
@@ -48,3 +56,24 @@ class TestMicrosoftDataLibrary(unittest.TestCase):
         lib = MicrosoftDataLibrary(use_pandas=True)
         self.assertTrue(lib.use_pandas(False))
         self.assertFalse(lib.use_pandas(False))
+
+    @mock.patch('MicrosoftDataLibrary.MicrosoftDataLibrary.read_query')
+    def test_read_table(self, mock_query) -> None:
+
+        mock_query.return_value = [{"count": "1"}]
+        self.lib.read_table("a", "b")
+        mock_query.assert_called_once_with(query='SELECT * FROM a.b')
+
+    @mock.patch('MicrosoftDataLibrary.MicrosoftDataLibrary.read_query')
+    def test_table_row_count(self, mock_query) -> None:
+
+        mock_query.return_value = [{"count": "1"}]
+        self.assertEquals(1, self.lib.table_row_count("a", "b"))
+        mock_query.assert_called_once_with(query='SELECT COUNT(*) FROM a.b')
+
+        mock_query.reset_mock()
+
+        self.lib.use_pandas(True)
+        mock_query.return_value = DataFrame([[1]], columns=['Count'])
+        self.assertEquals(1, self.lib.table_row_count("a", "b"))
+        mock_query.assert_called_once_with(query='SELECT COUNT(*) FROM a.b')
