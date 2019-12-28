@@ -1,5 +1,6 @@
 from typing import List, Dict, Any
 
+from robot.api import logger
 from robot.api.deco import keyword
 import pandas as pd
 from .client import DatabaseClient
@@ -61,6 +62,56 @@ class MicrosoftDataLibrary:
         """
         self._connections[connection_name] = DatabaseClient(connection_string=connection_string)
         self._current_connection = self._connections[connection_name]
+
+    @keyword
+    def connect_with_config(self, connection_name: str, config: Dict[str, str]):
+        """Connect to SQL Server using a configuration dictionary
+
+        Example of dictionary:
+
+        | = Key =    | = Description =             | = Example =                   |
+        | username   | SQL Authenticated username  | user                          |
+        | password   | SQL Authencticated password | pAssword1                     |
+        | dbname     | Database name to login      | AdventureWorks                |
+        | hostname   | Hostname of the SQL Server  | localhost                     |
+        | dialect    | Alchemy dialect to use      | mssql+pyodbc                  |
+        | driver     | Alchemy driver to use       | SQL+Server+Native+Client+11.0 |
+
+        This will generate an Alchemy URL similar to:
+
+            mssql+pyodbc://user:pAssword1@localhost/AdventureWorks?driver=SQL+Server+Native+Client+11.0
+
+        | = Key =    | = Description =             | = Example =                   |
+        | trusted    | Use Trusted authentication  | Yes                           |
+        | dbname     | Database name to login      | AdventureWorks                |
+        | hostname   | Hostname of the SQL Server  | localhost                     |
+        | dialect    | Alchemy dialect to use      | mssql+pyodbc                  |
+        | driver     | Alchemy driver to use       | ODBC+Driver+17+for+SQL+Server |
+
+        This will generate an Alchemy URL similar to:
+
+            mssql+pyodbc://@localhost/AdventureWorks?driver=ODBC+Driver+17+for+SQL+Server&trusted_connection=yes
+
+        """
+        try:
+
+            _trusted = config.get("trusted", "0").lower() in ("yes", "true", "t", "1")
+
+            alchemy_url = f"{config['dialect']}://"
+
+            if _trusted is False:
+                alchemy_url += f"{config['username']}:{config['password']}"
+
+            alchemy_url += f"@{config['hostname']}/{config['dbname']}?driver={config['driver']}"
+
+            if _trusted:
+                alchemy_url += "&trusted_connection=yes"
+
+            self.connect(connection_name=connection_name, connection_string=alchemy_url)
+
+        except KeyError as e:
+            logger.error(f"Missing configuration item {e}")
+            raise RuntimeError
 
     @keyword(types={"connection_string": str})
     def connect_to_ssis_catalog(self, connection_string: str) -> None:

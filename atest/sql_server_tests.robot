@@ -42,6 +42,12 @@ Play with SQL Server
     ${exists}=                  table exists            dbo     DimCustomer
     should be true              ${exists}
 
+Logon to SQL Server with trusted connection
+    Connect to Database         trusted_conn            ${trusted_connection_string}
+    Use Pandas                  ${TRUE}
+    ${dict}=                    read query              SELECT TOP 10 * FROM dbo.DimCustomer
+    Log                         ${dict}
+
 Load data fixtures
     ${fixture_contents}=        Get File                ${FIXTURE}
     Log                         ${fixture_contents}

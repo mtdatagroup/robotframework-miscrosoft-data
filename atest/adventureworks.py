@@ -14,6 +14,10 @@ def _dict_to_connection_string(args: Dict[str, str]) -> str:
     return f"{args['dialect']}{args['user']}:{args['pass']}@{args['host']}/{args['dbname']}?driver={args['driver']}"
 
 
+def _dict_to_trusted_string(args: Dict[str, str]) -> str:
+    return f"{args['dialect']}@{args['host']}/{args['dbname']}?driver={args['driver']}&trusted_connection=yes"
+
+
 db_config = {
     "user": "user",
     "pass": "pass",
@@ -24,6 +28,7 @@ db_config = {
 }
 
 connection_string = _dict_to_connection_string(db_config)
+trusted_connection_string = _dict_to_trusted_string(db_config)
 
 ssis_config = copy.deepcopy(db_config)
 ssis_config["dbname"] = "SSISDB"

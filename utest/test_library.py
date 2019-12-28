@@ -1,10 +1,10 @@
 import unittest
 from unittest import mock
-from unittest.mock import PropertyMock, MagicMock
+from unittest.mock import MagicMock
+from pandas import DataFrame
 
 from MicrosoftDataLibrary import MicrosoftDataLibrary
 from MicrosoftDataLibrary import DatabaseClient
-from pandas import DataFrame
 
 
 class TestMicrosoftDataLibrary(unittest.TestCase):
@@ -77,3 +77,32 @@ class TestMicrosoftDataLibrary(unittest.TestCase):
         mock_query.return_value = DataFrame([[1]], columns=['Count'])
         self.assertEquals(1, self.lib.table_row_count("a", "b"))
         mock_query.assert_called_once_with(query='SELECT COUNT(*) FROM a.b')
+
+    @mock.patch('MicrosoftDataLibrary.MicrosoftDataLibrary.connect')
+    def test_connect_with_trusted_config(self, mock_connect) -> None:
+
+        config = {
+            "trusted": "1",
+            "dbname": "_dbname_",
+            "hostname": "_hostname_",
+            "dialect": "_dialect_",
+            "driver": "_driver_"
+        }
+        self.lib.connect_with_config("conn1", config)
+        expected_connection_string = '_dialect_://@_hostname_/_dbname_?driver=_driver_&trusted_connection=yes'
+        mock_connect.assert_called_once_with(connection_name='conn1', connection_string=expected_connection_string)
+
+    @mock.patch('MicrosoftDataLibrary.MicrosoftDataLibrary.connect')
+    def test_connect_with_username_and_password_config(self, mock_connect) -> None:
+
+        config = {
+            "username": "_username_",
+            "password": "_password_",
+            "dbname": "_dbname_",
+            "hostname": "_hostname_",
+            "dialect": "_dialect_",
+            "driver": "_driver_"
+        }
+        self.lib.connect_with_config("conn1", config)
+        expected_connection_string = '_dialect_://_username_:_password_@_hostname_/_dbname_?driver=_driver_'
+        mock_connect.assert_called_once_with(connection_name='conn1', connection_string=expected_connection_string)
