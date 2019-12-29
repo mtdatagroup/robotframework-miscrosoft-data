@@ -11,7 +11,7 @@ pipelines:
         caches:
           - pip
         script: # Modify the commands below to build your repository.
-          - pip install -r requirements-build.txt
+          - pip install -r requirements.txt
     - step:
         script:
           - python setup.py sdist bdist_wheel install
@@ -20,4 +20,4 @@ pipelines:
           - python3 utest/run.py
     - step:
         script:
-          - python3 atest/run.py
+          - python3 utest/run.py
