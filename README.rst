@@ -29,7 +29,6 @@ Python or Jython::
 
     python setup.py install
 
-.. code:: robotframework
 
 Support
 -------
