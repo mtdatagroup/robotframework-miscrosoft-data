@@ -1,8 +1,0 @@
-robotframework
-robotframework-sshlibrary
-SQLAlchemy
-numpy
-pandas
-pyodbc
-python-dotenv
-PyYAML
