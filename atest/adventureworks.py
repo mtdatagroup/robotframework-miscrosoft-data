@@ -27,10 +27,9 @@ db_config = {
     "driver": _DB_DRIVER
 }
 
-connection_string = _dict_to_connection_string(db_config)
-trusted_connection_string = _dict_to_trusted_string(db_config)
-
 ssis_config = copy.deepcopy(db_config)
 ssis_config["dbname"] = "SSISDB"
 
-ssis_connection_string = _dict_to_connection_string(ssis_config)
+trusted_connection_string = _dict_to_trusted_string(db_config)
+user_and_pass_connection_string = _dict_to_connection_string(db_config)
+ssis_connection_string = _dict_to_trusted_string(ssis_config)

@@ -1,4 +1,5 @@
 import os
+import subprocess
 from typing import List, Any, Dict
 import pandas as pd
 import sqlalchemy as alc
@@ -110,3 +111,31 @@ class DatabaseClient:
         query = "select property_name, property_value from catalog.catalog_properties"
         df = self.read_query(query)
         return {prop['property_name']: prop['property_value'] for prop in df.to_dict(orient="records")}
+
+
+class SSISClient:
+
+    RETURN_CODES = {
+        0: "The package executed successfully.",
+        1: "The package failed.",
+        3: "The package was canceled by the user.",
+        4: "The utility was unable to locate the requested package. The package could not be found.",
+        5: "The utility was unable to load the requested package. The package could not be loaded.",
+        6: "The utility encountered an internal error of syntactic or semantic errors in the command line."
+    }
+
+    def __init__(self, ssis_server: str, dtexec_path: str = None) -> None:
+
+        self.ssis_server = ssis_server
+        self.dtexec_path = dtexec_path or "dtexec"
+
+    def execute_server_package(self, package_path: str) -> subprocess.CompletedProcess:
+
+        dtexec_command = [self.dtexec_path, "/ISServer",  f'"{package_path}"', "/Server", f'"{self.ssis_server}"']
+        return subprocess.run(dtexec_command,  shell=True, check=False, capture_output=True)
+
+
+if  __name__ == "__main__":
+
+    client = SSISClient()
+    client.execute_server_package("\SSISDB\AdventureWorksSSIS\ETL\CopyFactSales.dtsx")

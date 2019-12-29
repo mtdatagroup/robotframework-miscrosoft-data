@@ -6,10 +6,11 @@ from robotstatuschecker import process_output
 
 CURRENT_DIR = dirname(abspath(__file__))
 OUTPUT_ROOT = join(CURRENT_DIR, 'results')
+TEST_PATH = "atest"
 
 sys.path.append(join(CURRENT_DIR, '..', 'src'))
 
-COMMON_OPTS = ('--log', 'NONE', '--report', 'NONE')
+COMMON_OPTS = ('--log', 'NONE', '--report', 'NONE', '--extension', 'robot')
 
 
 def atests(*opts):
@@ -26,10 +27,4 @@ def run_robot(*opts):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 1 or '--help' in sys.argv:
-        print(__doc__)
-        rc = 251
-    else:
-        rc = atests(*sys.argv[1:])
-    print("\nAfter status check there were %s failures." % rc)
-    sys.exit(rc)
+    sys.exit(atests(TEST_PATH))

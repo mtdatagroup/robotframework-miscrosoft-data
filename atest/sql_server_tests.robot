@@ -3,12 +3,9 @@
 Resource            resources/common.robot
 Library             OperatingSystem
 
-Test Setup          Connect to Database     AdventureWorks      ${connection_string}
+Test Setup          Connect to Database     AdventureWorks      ${trusted_connection_string}
 Test Teardown       Disconnect from Databases
-Default Tags        Database        SQL Server      windows
-
-*** Variables ***
-${FIXTURE}                      ${TESTDATA_DIRECTORY}/test.csv
+Default Tags        Database        SQL Server
 
 *** Test Cases ***
 Interact with Connection
@@ -16,7 +13,7 @@ Interact with Connection
     log                         ${connection_name}
     ${connections}=             list connections
     log                         ${connections}
-    Connect to Database         Bob         ${connection_string}
+    Connect to Database         Bob         ${trusted_connection_string}
     ${connections}=             list connections
     log                         ${connections}
     switch connection           Bob
@@ -42,28 +39,11 @@ Play with SQL Server
     ${exists}=                  table exists            dbo     DimCustomer
     should be true              ${exists}
 
-Logon to SQL Server with trusted connection
-    Connect to Database         trusted_conn            ${trusted_connection_string}
-    Use Pandas                  ${TRUE}
+Logon to SQL Server with username and password
+    [Tags]                      Username and Password Authentication
+    Connect to Database         trusted_conn            ${user_and_pass_connection_string}
     ${dict}=                    read query              SELECT TOP 10 * FROM dbo.DimCustomer
     Log                         ${dict}
-
-Load data fixtures
-    ${fixture_contents}=        Get File                ${FIXTURE}
-    Log                         ${fixture_contents}
-    truncate table              dbo                     NameAgeTable
-    ${row_count}=               table row count         dbo                 NameAgeTable
-    should be equal as integers                         ${row_count}        0
-    ${row_count}=               load table with CSV     ${FIXTURE}
-    ...                                                 dbo
-    ...                                                 NameAgeTable
-    should not be equal as integers                     ${row_count}        0
-    ${records}=                 read_query              SELECT * FROM dbo.NameAgeTable
-    Log                         ${records}
-    ${records2}=                read table              dbo         NameAgeTable
-    log                         ${records2}
-    ${metadata}=                get table metadata      dbo         NameAgeTable
-    log                         ${metadata}
 
 Play with Procedures and Functions
     ${functions}=               list functions
@@ -78,17 +58,3 @@ Play with Procedures and Functions
     ${result3}=                 execute procedure       SelectAllCustomersWithTotalChildren    ${params}
     log                         ${result3}
 
-Play with the SSIS Catalog
-    connect to ssis catalog     ${ssis_connection_string}
-    ${catalog_properties}=      get SSIS catalog properties
-    log                         ${catalog_properties}
-    ${catalog_folders}=         list ssis folders
-    log                         ${catalog_folders}
-    should contain              ${catalog_folders}      AdventureWorksSSIS
-    ${catalog_projects}=        list all SSIS projects
-    log                         ${catalog_projects}
-    should contain              ${catalog_projects}     ETL
-    ${project_exists}=          ssis project exists     ETL
-    should be true              ${project_exists}
-    ${project_exists}=          ssis project exists     ETL     AdventureWorksSSIS
-    should be true              ${project_exists}

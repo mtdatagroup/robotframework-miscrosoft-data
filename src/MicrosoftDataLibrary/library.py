@@ -1,12 +1,15 @@
+import collections
 from typing import List, Dict, Any
 
 from robot.api import logger
 from robot.api.deco import keyword
 import pandas as pd
-from .client import DatabaseClient
+from .client import DatabaseClient, SSISClient
 from .version import VERSION
 
 __version__ = VERSION
+
+Config = collections.namedtuple('Config', 'use_pandas ssis_server dtexec_path')
 
 
 class MicrosoftDataLibrary:
@@ -20,12 +23,26 @@ class MicrosoftDataLibrary:
     _PANDA_DATAFRAME_ROW_COUNT_SHAPE = 0
     _PANDA_DATAFRAME_COL_COUNT_SHAPE = 1
 
-    def __init__(self, use_pandas: bool = False) -> None:
+    DEFAULT_USE_PANDAS = False
+    DEFAULT_SSIS_SERVER = "localhost"
+    DEFAULT_DTEXEC_PATH = "dtexec"
+
+    def __init__(self,
+                 use_pandas: bool = DEFAULT_USE_PANDAS,
+                 ssis_server: str = DEFAULT_SSIS_SERVER,
+                 dtexec_path : str = DEFAULT_DTEXEC_PATH) -> None:
         """use_pandas = True will return all query results as a Panda Dataframe"""
+
+        self._config = Config(
+            use_pandas or self.DEFAULT_USE_PANDAS,
+            ssis_server or self.DEFAULT_SSIS_SERVER,
+            dtexec_path or self.DEFAULT_DTEXEC_PATH
+        )
+
         self._current_connection = None
         self._connections = {}
-        self._use_pandas = use_pandas
         self._ssis_catalog_client = None
+        self._ssis_exec_client = None
 
     @property
     def ssis_catalog_client(self) -> DatabaseClient:
@@ -34,20 +51,16 @@ class MicrosoftDataLibrary:
         return self._ssis_catalog_client
 
     @property
+    def ssis_exec_client(self) -> SSISClient:
+        if self._ssis_exec_client is None:
+            self._ssis_exec_client = SSISClient(self._config.ssis_server, self._config.dtexec_path)
+        return self._ssis_exec_client
+
+    @property
     def current_connection(self) -> DatabaseClient:
         if self._current_connection is None:
             raise RuntimeError("No connection has been established")
         return self._current_connection
-
-    @keyword(types={"use_pandas": bool})
-    def use_pandas(self, use_pandas: bool) -> bool:
-        """Specify whether to return queries as a Panda Dataframe or Python Dictionary.
-
-        This will return the current setting.
-        """
-        _orig = self._use_pandas
-        self._use_pandas = use_pandas
-        return _orig
 
     @keyword
     def number_of_connections(self) -> int:
@@ -190,13 +203,13 @@ class MicrosoftDataLibrary:
     def read_query(self, query: str) -> Any:
         """Execute query and return result set"""
         df = self.current_connection.read_query(query)
-        return df if self._use_pandas else df.to_dict(orient="records")
+        return df if self._config.use_pandas else df.to_dict(orient="records")
 
     @keyword(types={"query": str})
     def read_scalar(self, query: str) -> str:
         """Get single value back (first column from first record)"""
         res = self.read_query(query=query)
-        return res.iloc[0][0] if self._use_pandas else list(res[0].values())[0]
+        return res.iloc[0][0] if self._config.use_pandas else list(res[0].values())[0]
 
     @keyword
     def list_schemas(self) -> List[str]:
@@ -303,3 +316,20 @@ class MicrosoftDataLibrary:
     def list_all_ssis_packages(self) -> List[str]:
         """List all SSIS packages"""
         return self.ssis_catalog_client.list_all_ssis_packages()
+
+    @keyword(types={"package_path": str})
+    def execute_ssis_package(self, package_path: str) -> int:
+        """Execute a SSIS package stored on the Server"""
+
+        completed_process = self.ssis_exec_client.execute_server_package(package_path)
+
+        if completed_process.stdout:
+            logger.info(completed_process.stdout)
+        if completed_process.stderr:
+            logger.error(completed_process.stderr)
+
+        rc = completed_process.returncode
+
+        logger.info(f"Return Code: {rc} - {SSISClient.RETURN_CODES[rc]}")
+
+        return completed_process.returncode
