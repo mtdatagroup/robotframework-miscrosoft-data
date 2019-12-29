@@ -13,5 +13,11 @@ pipelines:
         script: # Modify the commands below to build your repository.
           - pip install -r requirements-build.txt
     - step:
+        script:
+          - python setup.py sdist bdist_wheel install
+    - step:
         script: 
           - python3 utest/run.py
+    - step:
+        script:
+          - python3 atest/run.py

@@ -133,9 +133,3 @@ class SSISClient:
 
         dtexec_command = [self.dtexec_path, "/ISServer",  f'"{package_path}"', "/Server", f'"{self.ssis_server}"']
         return subprocess.run(dtexec_command,  shell=True, check=False, capture_output=True)
-
-
-if  __name__ == "__main__":
-
-    client = SSISClient()
-    client.execute_server_package("\SSISDB\AdventureWorksSSIS\ETL\CopyFactSales.dtsx")
