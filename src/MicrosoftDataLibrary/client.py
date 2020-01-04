@@ -1,4 +1,3 @@
-import os
 import subprocess
 from typing import List, Any, Dict
 import pandas as pd
@@ -21,7 +20,6 @@ class DatabaseClient:
         self._engine = None
 
     def execute_query(self, query: str) -> None:
-        logger.debug(f"ExecuteQuery({query})")
         res = self._engine.execute(query)
         res.close()
 
