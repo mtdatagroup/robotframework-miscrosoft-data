@@ -12,3 +12,9 @@ Connect to Database
 
 Disconnect from Databases
     Disconnect All
+
+Table Should be Empty
+    [Arguments]        ${schema_name}       ${table_name}
+    ${is_empty}=       table is empty       ${schema_name}
+    ...                                     ${table_name}
+    should be true     ${is_empty}

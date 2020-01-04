@@ -18,14 +18,15 @@ URL = 'https://github.com/me/myproject'
 EMAIL = 'mark.p.stella@gmail.com'
 AUTHOR = 'Mark Stella'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.1.0'
+VERSION = '0.1.1'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
     'robotframework >= 3.1.2',
     'SQLAlchemy >= 1.3.12',
     'pandas >= 0.25.3',
-    'pyodbc >= 4.0.27'
+    'pyodbc >= 4.0.27',
+    'xlrd >= 1.0.0'
 ]
 
 # What packages are optional?

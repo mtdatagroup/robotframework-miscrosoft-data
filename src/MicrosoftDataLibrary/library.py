@@ -23,20 +23,36 @@ class MicrosoftDataLibrary:
     _PANDA_DATAFRAME_ROW_COUNT_SHAPE = 0
     _PANDA_DATAFRAME_COL_COUNT_SHAPE = 1
 
-    DEFAULT_USE_PANDAS = False
-    DEFAULT_SSIS_SERVER = "localhost"
-    DEFAULT_DTEXEC_PATH = "dtexec"
+    _DEFAULT_USE_PANDAS = False
+    _DEFAULT_SSIS_SERVER = "localhost"
+    _DEFAULT_DTEXEC_PATH = "dtexec"
 
     def __init__(self,
-                 use_pandas: bool = DEFAULT_USE_PANDAS,
-                 ssis_server: str = DEFAULT_SSIS_SERVER,
-                 dtexec_path : str = DEFAULT_DTEXEC_PATH) -> None:
-        """use_pandas = True will return all query results as a Panda Dataframe"""
+                 use_pandas: bool = _DEFAULT_USE_PANDAS,
+                 ssis_server: str = _DEFAULT_SSIS_SERVER,
+                 dtexec_path: str = _DEFAULT_DTEXEC_PATH) -> None:
+        """MicrosoftDataLibrary allows some import time configuration to be set.
+
+        The following parameters can be set:
+        | = Parameter = | = Description =                                          | = Default = |
+        | use_pandas    | if set to True, all results will be as a Pandas Datframe | $FALSE}     |
+        | ssis_server   | hostname of SSIS server                                  | localhost   |
+        | dtexec_path   | full path to dtexec binary                               | dtexec      |
+
+        For example:
+        | Library | MicrosoftDataLibrary |
+
+        This will setup the library to return Pandas Dataframes:
+        | Library | MicrosoftDataLibrary | ${TRUE} |
+
+        You can also use named parameters:
+        | Library | MicrosoftDataLibrary | use_pandas=${TRUE} | ssis_server=192.168.0.1 |
+        """
 
         self._config = Config(
-            use_pandas or self.DEFAULT_USE_PANDAS,
-            ssis_server or self.DEFAULT_SSIS_SERVER,
-            dtexec_path or self.DEFAULT_DTEXEC_PATH
+            use_pandas or self._DEFAULT_USE_PANDAS,
+            ssis_server or self._DEFAULT_SSIS_SERVER,
+            dtexec_path or self._DEFAULT_DTEXEC_PATH
         )
 
         self._current_connection = None
@@ -84,7 +100,7 @@ class MicrosoftDataLibrary:
 
         | = Key =    | = Description =             | = Example =                   |
         | username   | SQL Authenticated username  | user                          |
-        | password   | SQL Authencticated password | pAssword1                     |
+        | password   | SQL Authenticated password  | secret_password               |
         | dbname     | Database name to login      | AdventureWorks                |
         | hostname   | Hostname of the SQL Server  | localhost                     |
         | dialect    | Alchemy dialect to use      | mssql+pyodbc                  |
@@ -92,7 +108,7 @@ class MicrosoftDataLibrary:
 
         This will generate an Alchemy URL similar to:
 
-            mssql+pyodbc://user:pAssword1@localhost/AdventureWorks?driver=SQL+Server+Native+Client+11.0
+            - `mssql+pyodbc://user:pAssword1@localhost/AdventureWorks?driver=SQL+Server+Native+Client+11.0`
 
         | = Key =    | = Description =             | = Example =                   |
         | trusted    | Use Trusted authentication  | Yes                           |
@@ -103,7 +119,7 @@ class MicrosoftDataLibrary:
 
         This will generate an Alchemy URL similar to:
 
-            mssql+pyodbc://@localhost/AdventureWorks?driver=ODBC+Driver+17+for+SQL+Server&trusted_connection=yes
+            - `mssql+pyodbc://@localhost/AdventureWorks?driver=ODBC+Driver+17+for+SQL+Server&trusted_connection=yes`
 
         """
         try:
@@ -125,6 +141,14 @@ class MicrosoftDataLibrary:
         except KeyError as e:
             logger.error(f"Missing configuration item {e}")
             raise RuntimeError
+
+    @staticmethod
+    def _table_select_statement(schema_name: str, table_name: str) -> str:
+        return f"SELECT * FROM {schema_name}.{table_name}"
+
+    @staticmethod
+    def _table_select_count_statement(schema_name: str, table_name: str) -> str:
+        return f"SELECT COUNT(*) FROM {schema_name}.{table_name}"
 
     @keyword(types={"connection_string": str})
     def connect_to_ssis_catalog(self, connection_string: str) -> None:
@@ -156,8 +180,8 @@ class MicrosoftDataLibrary:
         """Disconnect current active connection"""
         try:
             self.current_connection.disconnect()
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(e)
         finally:
             del self._connections[self.current_connection_name()]
             self._current_connection = None
@@ -172,8 +196,8 @@ class MicrosoftDataLibrary:
             _current_connection_name = self.current_connection_name() if self._current_connection else ""
             self._current_connection = self._connections[connection_name]
             return _current_connection_name
-        else:
-            raise RuntimeError(f"Connection '{connection_name}' is not established in connection pool")
+
+        raise RuntimeError(f"Connection '{connection_name}' is not established in connection pool")
 
     @keyword
     def current_connection_name(self) -> str:
@@ -196,8 +220,7 @@ class MicrosoftDataLibrary:
     @keyword(types={"schema_name": str, "table_name": str})
     def read_table(self, schema_name: str, table_name: str) -> Any:
         """Read all contents of table"""
-        query = f"SELECT * FROM {schema_name}.{table_name}"
-        return self.read_query(query=query)
+        return self.read_query(query=self._table_select_statement(schema_name=schema_name, table_name=table_name))
 
     @keyword(types={"query": str})
     def read_query(self, query: str) -> Any:
@@ -208,8 +231,8 @@ class MicrosoftDataLibrary:
     @keyword(types={"query": str})
     def read_scalar(self, query: str) -> str:
         """Get single value back (first column from first record)"""
-        res = self.read_query(query=query)
-        return res.iloc[0][0] if self._config.use_pandas else list(res[0].values())[0]
+        res = self.current_connection.read_query(query=query)
+        return res.iloc[0][0]
 
     @keyword
     def list_schemas(self) -> List[str]:
@@ -232,9 +255,19 @@ class MicrosoftDataLibrary:
         return table_name in self.list_tables(schema_name=schema_name)
 
     @keyword(types={"schema_name": str, "table_name": str})
+    def table_is_empty(self, schema_name: str, table_name: str) -> bool:
+        """Assert that a table contains no records"""
+        return self.table_row_count(schema_name, table_name) <= 0
+
+    @keyword(types={"schema_name": str, "table_name": str})
+    def table_is_not_empty(self, schema_name: str, table_name: str) -> bool:
+        """Assert that a table is not empty and contains records"""
+        return self.table_row_count(schema_name, table_name) > 0
+
+    @keyword(types={"schema_name": str, "table_name": str})
     def table_row_count(self, schema_name: str, table_name: str) -> int:
         """Get number of records in table"""
-        return int(self.read_scalar(f"SELECT COUNT(*) FROM {schema_name}.{table_name}"))
+        return int(self.read_scalar(self._table_select_count_statement(schema_name=schema_name, table_name=table_name)))
 
     @keyword(types={"query": str})
     def query_row_count(self, query: str) -> int:
@@ -242,12 +275,46 @@ class MicrosoftDataLibrary:
         df = self.current_connection.read_query(query)
         return df.shape[self._PANDA_DATAFRAME_ROW_COUNT_SHAPE]
 
-    @keyword(types={"file_path": str, "schema_name": str, "table_name": str})
-    def load_table_with_csv(self, file_path: str, schema_name: str, table_name: str) -> int:
-        """Append CSV to table and return the total number of records in the table"""
-        df = pd.read_csv(filepath_or_buffer=file_path, header=0)
+    @keyword(types={"file_path": str, "sheet_name": str})
+    def get_xlsx(self, file_path: str, sheet_name: str) -> pd.DataFrame:
+        """Read contents of xlsx file into a Pandas Dataframe"""
+        return pd.read_excel(file_path, sheet_name=sheet_name, index_col=None, header=0)
+
+    @keyword(types={"expected_dataframe": pd.DataFrame, "actual_dataframe": pd.DataFrame})
+    def dataframes_should_match(self, expected_dataframe: pd.DataFrame, actual_dataframe: pd.DataFrame):
+        """Assert that expected and actual dataframes are equal"""
+        if expected_dataframe.equals(actual_dataframe) is False:
+            raise AssertionError("Actual does not match expected.")
+
+    @keyword(types={"schema_name": str, "table_name": str, "file_path": str, "sheet_name": str})
+    def table_should_match_xlsx(self, schema_name: str, table_name: str, file_path: str, sheet_name: str):
+        """Assert that contents of database table match contents of XLSX"""
+        xlsx_df = self.get_xlsx(file_path=file_path, sheet_name=sheet_name)
+        table_df = self.current_connection.read_query(self._table_select_statement(schema_name, table_name))
+        self.dataframes_should_match(xlsx_df, table_df)
+
+    @keyword(types={"query": str, "file_path": str, "sheet_name": str})
+    def query_should_match_xlsx(self, query: str, file_path: str, sheet_name: str):
+        """Assert that the result set of a query matches the contents of XLSX"""
+        xlsx_df = self.get_xlsx(file_path=file_path, sheet_name=sheet_name)
+        table_df = self.current_connection.read_query(query)
+        self.dataframes_should_match(xlsx_df, table_df)
+
+    def _load_table_with_dataframe(self, df: pd.DataFrame, schema_name: str, table_name: str) -> int:
         self.current_connection.load_df(df=df, schema_name=schema_name, table_name=table_name)
         return self.table_row_count(schema_name=schema_name, table_name=table_name)
+
+    @keyword(types={"schema_name": str, "table_name": str, "file_path": str})
+    def load_table_with_csv(self, schema_name: str, table_name: str, file_path: str) -> int:
+        """Append CSV to table and return the total number of records in the table"""
+        df = pd.read_csv(filepath_or_buffer=file_path, header=0)
+        return self._load_table_with_dataframe(df, schema_name, table_name)
+
+    @keyword(types={"schema_name": str, "table_name": str, "file_path": str, "sheet_name": str})
+    def load_table_with_xlsx(self, schema_name: str, table_name: str, file_path: str, sheet_name: str) -> int:
+        """Append XLSX to table and return the total number of records in the table"""
+        df = self.get_xlsx(file_path=file_path, sheet_name=sheet_name)
+        return self._load_table_with_dataframe(df, schema_name, table_name)
 
     @keyword(types={"schema_name": str, "table_name": str})
     def get_table_metadata(self, schema_name: str, table_name: str) -> List[Dict[str, str]]:
@@ -296,7 +363,7 @@ class MicrosoftDataLibrary:
         return self.ssis_catalog_client.list_ssis_projects(folder_name)
 
     @keyword(types={"project_name": str, "folder_name": str})
-    def ssis_project_exists(self, project_name: str, folder_name: str = None) -> List[str]:
+    def ssis_project_exists(self, project_name: str, folder_name: str = None) -> bool:
         """Determine whether a SSIS project exists"""
         if folder_name is None:
             return project_name in self.list_all_ssis_projects()
